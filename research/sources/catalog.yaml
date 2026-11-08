@@ -119,7 +119,7 @@ sources:
     title: Romeotpt channel (CRT secrets ep.1-10, CRTology 2026 series, live tape reading)
     url: https://www.youtube.com/@Romeotpt/videos
     why: The source. Study in this order — What is turtle soup? -> What is CRT? -> CRT secrets 1-10 -> live sessions -> CRTology.
-    status: todo
+    status: done
 
   - id: crt-sham
     phase: 2
@@ -127,7 +127,7 @@ sources:
     author: Sham
     title: Sham channel (CRT selection, daily bias, entries, order blocks)
     url: https://www.youtube.com/channel/UC9AYwByt6YSa41N_upmy26g/videos
-    status: todo
+    status: done
 
   # ---------------- Phase 3: community (compare against Romeo, never override) ----------------
   - id: community-candle-range-theory
