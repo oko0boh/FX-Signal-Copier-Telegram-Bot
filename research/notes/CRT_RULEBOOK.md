@@ -6,6 +6,7 @@
 |---|---|
 | Status | **Draft v0.1**. Not approved. Not yet backtested. |
 | Built from | 29 videos: 17 Romeo (creator of CRT) + 12 Sham (CRT/ICT trader), via the 30 notes in `research/notes/crt/romeo/` (18 files, one of which, the CRTology intro, has no transcript) and `research/notes/crt/sham/` (12 files). |
+| Also studied | 3 PDF guides by TradesbyVee / AR (secondary), section 6.2. |
 | Pending | Romeo's book (on sale 1 Feb 2026, `romeo/13-secrets-ep10-clean-close`), remaining CRTology 2026 episodes, the ICT foundation notes (`notes/ict/` is still empty), community notes (Phase 3). |
 | Written | 2026-11-08 |
 
@@ -935,7 +936,7 @@ Things the sources leave to judgement. Each has a **PROPOSED (not from source)**
 | G-12 | **Which candles form a multi-candle OB.** | sham/02 36:41 | Maximal run of consecutive opposite-colour candles ending at the bar before the engulf, that includes the purge bar. | `ob_max_candles: 4` |
 | G-13 | **"Meaningful HTF high/low" for OB purges.** | sham/02 3:01 | Fractal swing on a TF ≥ one step above the OB TF, or a prior D/W candle high/low, or a CRT high/low. | `ob_liq_tf_steps: 1` |
 | G-14 | **End of OTE leg one; "wave" of closes; "sharp" retrace.** | romeo/18 | Leg end = extreme after activation until the first close that retraces ≥ `leg_end_atr × ATR`. Log the number of closes through the level. | `leg_end_atr: 0.5` |
-| G-15 | **Identifying KoD-R in real time.** Only clear afterwards. | romeo/04, 05, 10 | Inside an active CRT after TP1: any LTF sweep of the latest swing high (bear) that closes back below, with no new C2 high. Use as stop/invalidation anchor and optional re-entry only. | `kod_r_requires_tp1: true` |
+| G-15 | **Identifying KoD-R in real time.** Only clear afterwards. | romeo/04, 05, 10 | Inside an active CRT after TP1: any LTF sweep of the latest swing high (bear) that closes back below, with no new C2 high. Use as stop/invalidation anchor and optional re-entry only. | `kod_r_requires_tp1: false` (changed in 6.2) |
 | G-16 | **"Decisive" / "multiple" closes beyond the key high.** | romeo/04 16:04 | ≥ 2 LTF closes beyond, each with body/range ≥ 0.5. | `decisive_closes: 2` |
 | G-17 | **"Most visible" old low** (pairing for the Lens). | romeo/17 17:50 | Fractal swing with the largest prominence (distance to the next swing beyond it) within the last 12 candles of that TF. | `visible_lookback: 12` |
 | G-18 | **Consolidation / range on the LTF** (Monday chop; range then TS). | romeo/16, romeo/17 | ≥ 6 LTF bars whose total high-low ≤ 1.5 × ATR(ltf). | `range_min_bars: 6`, `range_max_atr: 1.5` |
@@ -980,6 +981,39 @@ because Sham is openly ICT-based (sham/02, sham/10).
 Romeo's exact "six possibilities" (if they differ from ICT's profiles), and
 G-15 (identifying Romeo's kiss of death in real time). Sources for these are
 Romeo's book, Romeo's X threads, and Sham's channel.
+
+### 6.2 Findings from the user's PDF guides (secondary sources)
+
+Three PDFs were studied (notes in `research/notes/crt/books/`). **None is by
+Romeo.** Two are by his student TradesbyVee and one by a community author "AR".
+Romeo's own book is still pending (romeo/13). Priority order stays:
+Romeo videos > Sham videos > ICT > these guides. Marketing claims (accuracy
+percentages) are ignored. Statistics claimed in the guides are things to test
+in the backtest, not facts.
+
+| Affects | Finding | Source | v0.1 decision |
+|---|---|---|---|
+| G-01, CRT-R19 | **Exactly five key levels:** Old High Purged (OHP), Old Low Purged (OLP), FVG, Order Block, Rejection Block. **C2's sweep must reach the level:** purge the old high/low, or its wick must enter the FVG/OB/RB zone. | books/crt-keylevels p.3, p.11 | `kl_types` default = these five. ICT extras (breakers, opening prices, weekly-wick 50%) become backtest variants. |
+| G-19 | Rejection block zone = wick beyond the bodies (confirms ICT-K). | books/crt-keylevels p.9 | Adopt. |
+| G-22, CRT-R33..R36 | **1–5–9 rhythm** (NY): 4H opens 01/05/09/13/17/21. 01:00 candle often makes the day's low/high (expansion 1 to 05:00). **03:00 = turtle-soup hour.** 09:00 candle holds the OTE and expansion 2. 21:00 consolidates. | books/secrets-of-time p.18–20, 26, 28–29 | Adopt as the "correct time" for Romeo mode (agrees with Sham's 3/9 am). Ignore the book's extra 17:00 window (no other source). |
+| G-06, CRT-R35 | **Wednesday Model:** Monday = C1, Tuesday sweeps Monday's low/high and closes back inside, Wednesday expands. Entry below the midnight open (bull), target Monday's opposite extreme, close by Thursday. Same idea as ICT's Tuesday/Wednesday low-of-week profiles (6.1). | books/secrets-of-time p.24, 27–28 | Add as a named setup `weekly_model: wednesday` for the backtest. |
+| C-02 | Weekly *range* measured from the Sunday open. The 3-candle *sequence* starts Monday. | books/secrets-of-time | Keeps the existing default (H/L from Sunday 17:00, sequence from Monday 00:00). |
+| CRT-R44, R56 | Reference open = midnight NY. Time exit by session end / Thursday for the weekly model. | books/secrets-of-time; books/crt-secrets-series | Adopt as defaults. |
+| G-15 | **Kiss of death in real time:** inside an active CRT, after a turtle soup, a large counter candle forms. Enter on a close beyond it (a model #1), stop beyond the TS, target the CRT objective. Seen at the start of candle 3 **and** after TP1. | books/crt-secrets-series | Set `kod_r_requires_tp1: false` (was true). |
+| C-07 | Model #1 diagrams put the trigger at the model candle's **wick** extreme. | books/crt-secrets-series | Supports the existing wick default. Body stays a backtest variant. |
+| Test data | Dated chart examples from Romeo's episodes, e.g. **EURUSD daily 16–19 Sep 2025** (both targets hit). | books/crt-secrets-series §5 | Use as the first real-chart test cases for the CRT detector. |
+
+**Claims to verify in the backtest, not adopt:** 81% of weekly highs/lows form
+between Sunday open and Tuesday London; Tuesday prints the weekly high or low
+70% of the time (books/secrets-of-time p.23).
+
+**Rejected (conflict with primary sources):** 10–25 setups a week (Romeo/Sham:
+about 1–2 a week); entries on 5m/1m under a 1H bias (breaks Romeo's TF pairs);
+1–2% risk per trade (the author's number, not Romeo's; risk stays a user
+decision).
+
+**Still open after the books:** G-05 (Sham's closing-hour logic) and G-03
+(Romeo's six weekly candle shapes).
 
 ---
 
@@ -1030,10 +1064,12 @@ dealing_range:
   rebalance_required: true        # alt: false                (C-14)
   rebalance_level: eq             # alt: premium_fvg
   kod_s_dist: 0.25                # PROPOSED fraction of DR height  (CRT-R16)
+  kod_r_requires_tp1: false       # G-15; books/crt-secrets-series (KoD can occur before TP1)
+  weekly_model: none              # alt: wednesday (books/secrets-of-time p.24; ICT weekly profiles)
   fvg_fill: touch                 # PROPOSED; alt: half, full (DEF-17)
 
 key_level:
-  kl_types: [swing, prev_period_hl, candle_open, weekly_wick_50, fvg, ob]   # (CRT-R19)
+  kl_types: [old_high, old_low, fvg, ob, rb]   # (CRT-R19; five key levels, books/crt-keylevels). Variants: + prev_period_hl, candle_open, weekly_wick_50
   kl_select: score                # PROPOSED; alt: nearest    (G-01)
   kl_max_dist_atr: 1.5            # PROPOSED
   kl_touch_tol: 0.0               # PROPOSED, in ATR(ltf)     (CRT-R20)
