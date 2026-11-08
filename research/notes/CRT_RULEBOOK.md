@@ -948,6 +948,39 @@ Things the sources leave to judgement. Each has a **PROPOSED (not from source)**
 | G-25 | **"Clean" weekly range; fake vs real PD arrays; strength classes (very bullish … very bearish).** | romeo/02; romeo/05 11:48; romeo/17 4:04 | Not modelled in v0.1. Log weekly range / ATR(W). | – |
 | G-26 | **Ranging day / when to stay neutral.** | sham/03 31:22; sham/11 | CRT-R13 proxy: previous day range < 0.5 × ADR(20), or a bias-table conflict. | `ranging_adr_frac` |
 
+### 6.1 ICT answers to the gaps
+
+CRT is built on ICT, so most gaps above are answered by standard ICT concepts.
+The entries below are tagged **ICT-K**: Claude wrote them from its general
+knowledge of ICT's teaching, before checking them against transcripts. Each
+names the ICT lecture to verify it against (Phase 1 study). Once verified,
+the tag becomes a normal source citation.
+
+Romeo rejects some ICT tools: fixed fib levels as the cause of a turn, and
+FVG/OB reasoning (romeo/18, romeo/17). So in **Romeo mode** these answers are
+backtest alternatives, not overrides. In **Sham mode** they are the default,
+because Sham is openly ICT-based (sham/02, sham/10).
+
+| Gap | ICT answer (ICT-K) | How to code it | Verify against |
+|---|---|---|---|
+| G-01 key level | A key level is a **PD array** (premium/discount array). ICT's PD array matrix: **in premium** (for sells): old high / buy-side liquidity, bearish rejection block, bearish order block, bearish FVG, bearish breaker, bearish mitigation block, liquidity void. **In discount** (for buys): the mirror. Arrays are chosen inside the current **dealing range**: only premium arrays above equilibrium for sells, only discount arrays below it for buys. Which old highs/lows matter is set by the **IPDA data ranges**: look back 20, 40 and 60 trading days. Opening prices (midnight NY, weekly open; NWOG/NDOG = new week/day opening gaps) are also reference levels. | `kl_candidates = pd_arrays(htf) ∩ correct_half(dealing_range)`, swings limited to the IPDA 20/40/60-day lookbacks. Rank by HTF (monthly > weekly > daily > 4H), then by the confluence count (G-01 score). | 2022 Mentorship (PD arrays, premium/discount); Core Content (PD array matrix, IPDA data ranges) |
+| G-02 swing strength | **Short-term high (STH)** = a 3-candle swing (high with a lower high on each side). **Intermediate-term high (ITH)** = an STH with lower STHs on both sides. **Long-term high (LTH)** = an ITH with lower ITHs on both sides. Mirror for lows. ITH/LTH are the "old highs/lows" that matter. | Recursive fractal: level 1 = 3-bar swing; level n = a level n-1 swing with lower level n-1 swings either side. `swing_level ≥ 2` for key levels. | Core Content / 2022 Mentorship (market structure) |
+| G-03 / G-06 weekly profiles | ICT **weekly range profiles** (bullish and bearish versions of each): **Classic Tuesday low/high of the week**; **Wednesday low/high of the week**; **Consolidation Thursday reversal**; **Seek & destroy Friday**; **Wednesday weekly reversal**; **Consolidation midweek rally/decline**. Romeo's "six possibilities" may be his own set, so keep both. | Label every historical week with the profile it matched (weekday of the weekly high/low plus HTF PD array reached). Use the weekday frequencies as priors. Feed CRT-R35 (weekday filter). | Core Content **Month 07: "Defining Weekly Range Profiles"** |
+| G-04 market profile | **Power of Three / AMD** per candle (accumulation, manipulation, distribution) and the **Market Maker Buy/Sell Model**: original consolidation → engineering liquidity → smart-money reversal at a HTF PD array → re-accumulation/distribution → target. "Profile" = which leg of the model price is in now. | State machine over HTF swings: `consolidation → leg_to_liquidity → reversal_at_pda → return_leg`. Current state = market profile. | Market Maker Primer Course; 2022 Mentorship (MMBM/MMSM) |
+| G-09 dealing range | The **dealing range** = the swing high and swing low that contain the most recent **displacement** (energetic move leaving an FVG). Equilibrium = 50%. Premium above, discount below. A new dealing range starts when a new swing is created beyond it with displacement. | Matches G-09 proxy; add the requirement: the leg must contain ≥ 1 FVG. | 2022 Mentorship (dealing range topical study) |
+| G-10 unfilled liquidity | An FVG stays "open" until price trades to its **consequent encroachment** (CE, 50% of the gap). Liquidity = buy-side above equal/relative-equal highs, sell-side below equal lows. | `fvg_open := no later wick reached fvg.mid`; equal highs = two highs within `eq_tol × ATR`. | 2022 Mentorship (FVG, CE, liquidity) |
+| G-11 killzones & macros | **Killzones (NY time):** Asian 20:00–00:00, London 02:00–05:00, NY AM 07:00–10:00 (indices 08:30–11:00), London close 10:00–12:00, NY PM 13:30–16:00. **Macros** (short algorithm windows): 02:33–03:00, 04:03–04:30, 08:50–09:10, 09:50–10:10, 10:50–11:10, 11:50–12:10, 13:10–13:40, 15:15–15:45. Sham's "3/9/11 am" align with macros at the top of those hours. | Replace G-11 proxy with these exact windows (`macro_window: ict`). | 2022 Mentorship; ICT macro lectures (2023/2024 mentorship reference) |
+| G-14 OTE leg | ICT draws the fib on the **displacement leg** (swing extreme to swing extreme). OTE = 0.62–0.79, sweet spot 0.705, equilibrium 0.5. Targets via **standard-deviation projections** of the manipulation leg: −1, −2, −2.5, −4. | Add `target_mode: std_dev` with `[-1, -2, -2.5]` as a backtest alternative to the CRT 50%/extreme. | OTE Pattern Recognition series |
+| G-16 decisive close / displacement | **Displacement** = one or more large-bodied candles that leave an FVG behind. A "decisive" close beyond a level = a close by a displacement candle. | `decisive := close beyond level AND the move created an FVG`. | 2022 Mentorship |
+| G-19 rejection block | Bearish rejection block: at a swing high with long upper wicks, the zone from the highest **body** to the wick high. Sell when price returns into the body level. Mirror for bullish. | Zone `[max(open,close) of swing candles, swing high]`. | Core Content / Market Maker series |
+| G-22 time meets price | Price at a HTF PD array **during** a killzone or macro (G-11). | `kl_touch AND in_killzone_or_macro`. | 2022 Mentorship |
+| G-26 neutral / skip days | **CBDR** (Central Bank Dealers Range, 14:00–20:00 NY): if narrow (forex: under ~40 pips), expect expansion next day; use its standard deviations as targets. ICT also avoids high-impact news days (NFP, FOMC, CPI) and Monday-morning uncertainty. | `cbdr_range < cbdr_max_pips` → expansion day; skip days in the news calendar. | Core Content (CBDR, Asian range) |
+
+**Not answered by ICT, still open:** G-05 (Sham's "closing hour logic"),
+Romeo's exact "six possibilities" (if they differ from ICT's profiles), and
+G-15 (identifying Romeo's kiss of death in real time). Sources for these are
+Romeo's book, Romeo's X threads, and Sham's channel.
+
 ---
 
 ## 7. Parameters for the backtester
