@@ -1,0 +1,155 @@
+# Study source catalog — the single list of everything we study.
+# `scripts/build_catalog.py` reads this file and writes one video list per
+# source into sources/lists/<id>.tsv (video_id, title, duration, url).
+#
+# phase:   1 = ICT foundation, 2 = CRT core (Romeo, Sham), 3 = community / extra
+# order:   study order inside a phase (lower first)
+# status:  todo | in_progress | done
+
+sources:
+  # ---------------- Phase 1: ICT foundation ----------------
+  - id: ict-2022-mentorship
+    phase: 1
+    order: 1
+    author: ICT (Michael J. Huddleston)
+    title: 2022 ICT Mentorship
+    url: https://www.youtube.com/playlist?list=PLVgHx4Z63paYiFGQ56PjTF1PGePL3r69s
+    why: The most-used free ICT foundation — market structure, liquidity, FVG, killzones, daily bias.
+    status: todo
+
+  - id: ict-market-maker-primer
+    phase: 1
+    order: 2
+    author: ICT
+    title: ICT Forex - Market Maker Primer Course
+    url: https://www.youtube.com/playlist?list=PLVgHx4Z63paah1dHyad1OMJQJdm6iP2Yn
+    why: Market maker buy/sell models — the "why" behind sweeps that CRT relies on.
+    status: todo
+
+  - id: ict-ote-pattern
+    phase: 1
+    order: 3
+    author: ICT
+    title: ICT Pattern Recognition - Optimal Trade Entry
+    url: https://www.youtube.com/playlist?list=PLVgHx4Z63paY_zqefCOHItTatr3ptUcAB
+    why: OTE entry model (Romeo's CRTology ep.3 also covers OTE).
+    status: todo
+
+  - id: ict-ote-series
+    phase: 1
+    order: 4
+    author: ICT
+    title: ICT OTE Pattern Recognition Series
+    url: https://www.youtube.com/playlist?list=PLVgHx4Z63paaRnabpBl38GoMkxF1FiXCF
+    status: todo
+
+  - id: ict-micro-structure
+    phase: 1
+    order: 5
+    author: ICT
+    title: ICT Micro-Market Structure & Time & Price Concepts Series
+    url: https://www.youtube.com/playlist?list=PLVgHx4Z63paZ18-xU-CYsFKZ2rK-747x9
+    why: Time & price — needed for killzones and candle timing in CRT.
+    status: todo
+
+  - id: ict-precision-trading
+    phase: 1
+    order: 6
+    author: ICT
+    title: ICT Forex Precision Trading Concepts Series
+    url: https://www.youtube.com/playlist?list=PLVgHx4Z63paZ2CGeQuqDoCd0qv2df9_p5
+    status: todo
+
+  - id: ict-market-maker-series
+    phase: 1
+    order: 7
+    author: ICT
+    title: ICT Market Maker Forex Series
+    url: https://www.youtube.com/playlist?list=PLVgHx4Z63paZ0R9gMaq0y2fM_2vyNJadp
+    status: todo
+
+  - id: ict-core-content-m11
+    phase: 1
+    order: 8
+    author: ICT
+    title: 2017 ICT Private Mentorship Core Content Month 11
+    url: https://www.youtube.com/playlist?list=PLVgHx4Z63paa4FfJ8zI_QpdJICSLkXTQO
+    status: todo
+
+  - id: ict-core-content-m12
+    phase: 1
+    order: 9
+    author: ICT
+    title: 2017 ICT Private Mentorship Core Content Month 12
+    url: https://www.youtube.com/playlist?list=PLVgHx4Z63paaQ-8s2wrhfi6N2O_lTPuAI
+    status: todo
+
+  - id: ict-2023-mentorship
+    phase: 1
+    order: 10
+    author: ICT
+    title: 2023 ICT Mentorship
+    url: https://www.youtube.com/playlist?list=PLVgHx4Z63pabpjlduWBaEsn8VMtALhjGV
+    status: todo
+
+  - id: ict-2024-mentorship
+    phase: 1
+    order: 11
+    author: ICT
+    title: ICT 2024 Mentorship
+    url: https://www.youtube.com/playlist?list=PLVgHx4Z63paaM41aubnHOmqfeNjSAoBCV
+    status: todo
+
+  - id: ict-scalping
+    phase: 1
+    order: 12
+    author: ICT
+    title: ICT - Mastering High Probability Scalping Volumes 1-3
+    url: https://www.youtube.com/playlist?list=PLVgHx4Z63paYdrA3rupIlFhsYFA07GJGP
+    status: todo
+
+  # Core Content months 1-10 are not published as playlists on the ICT
+  # channel. TODO: find them (ICT channel "Core Content" uploads) and add here.
+
+  # ---------------- Phase 2: CRT core ----------------
+  - id: crt-romeo
+    phase: 2
+    order: 1
+    author: Romeo (Romeotpt) — creator of CRT / turtle soup
+    title: Romeotpt channel (CRT secrets ep.1-10, CRTology 2026 series, live tape reading)
+    url: https://www.youtube.com/@Romeotpt/videos
+    why: The source. Study in this order — What is turtle soup? -> What is CRT? -> CRT secrets 1-10 -> live sessions -> CRTology.
+    status: todo
+
+  - id: crt-sham
+    phase: 2
+    order: 2
+    author: Sham
+    title: Sham channel (CRT selection, daily bias, entries, order blocks)
+    url: https://www.youtube.com/channel/UC9AYwByt6YSa41N_upmy26g/videos
+    status: todo
+
+  # ---------------- Phase 3: community (compare against Romeo, never override) ----------------
+  - id: community-candle-range-theory
+    phase: 3
+    order: 1
+    author: Candle Range Theory channel
+    title: Candle Range Theory (channel)
+    url: https://www.youtube.com/channel/UCRmkYorItK6ifaE369AUcew/videos
+    status: todo
+
+  - id: community-candle-soup
+    phase: 3
+    order: 2
+    author: The Candle Soup
+    title: Candle Range theory (A-Z) personal approach
+    url: https://www.youtube.com/playlist?list=PLkiY2ik780wXGI66D2itHQWKcotwbHFxO
+    status: todo
+
+  - id: community-market-pulse
+    phase: 3
+    order: 3
+    author: MARKET PULSE
+    title: Candle Range Theory (CRT)
+    url: https://www.youtube.com/playlist?list=PLh_n1wq4b4GFjV8P6tfRZ0SJT_5KSrl_4
+    status: todo

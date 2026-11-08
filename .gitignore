@@ -1,2 +1,4 @@
 # ENVIORNMENT VARIABLES
-.env
+.envresearch/raw/*
+!research/raw/.gitkeep
+__pycache__/
