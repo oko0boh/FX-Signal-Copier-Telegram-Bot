@@ -1,4 +1,7 @@
 # ENVIORNMENT VARIABLES
-.envresearch/raw/*
+.env
+
+# Research: creators' transcripts, books and PDFs stay local
+research/raw/*
 !research/raw/.gitkeep
 __pycache__/
