@@ -58,8 +58,9 @@ Unchanged: browser-read, votes only, and counted only after 30 tracked setups (`
 
 ## Decided
 - Instruments: **EURUSD, GBPUSD, XAUUSD (gold)**. SMT comparisons: EURUSD vs GBPUSD (and DXY), gold vs silver (XAGUSD), using data only.
-- Risk: **1% per trade**.
+- Risk: **1% per trade**. Daily loss limit: **-2%** (stop for the New York day).
+- Broker: **MT5 via MetaAPI** (`metaapi-cloud-sdk`), reusing the connection and lot-size logic from `run.py`. Candle times come from the broker server clock (GMT+2/+3, which aligns 4H opens with 01/05/09 New York).
 
-## Still needed from the user
-- Daily loss limit (proposed: stop for the day after −2%, i.e. 2 losing trades).
-- Broker (MT4/MT5 via MetaAPI, OANDA, or other) and VPS choice.
+## Still needed
+- Romeo's book notes (being written in the user's Mac session).
+- VPS choice (MetaAPI runs in the cloud, so the bot itself can run on a small VPS or Render).

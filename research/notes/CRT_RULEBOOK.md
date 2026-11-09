@@ -690,7 +690,7 @@ Notation used in the pseudo-code: `HTF` = the candle timeframe being traded (the
 
 **CRT-R63. The bot must enforce a daily loss limit and an exposure cap.**
 - Sources: sham/07 (4:12–4:28).
-- Implementation: stop opening trades for the NY day once `realized_pnl_day <= -P:daily_loss_limit` (PROPOSED default 1R, not from source); `open_risk_total <= P:max_open_risk` (PROPOSED 1%).
+- Implementation: stop opening trades for the NY day once `realized_pnl_day <= -P:daily_loss_limit` (default **2% of equity = 2R at 1% risk**, user decision 2026-11-09); `open_risk_total <= P:max_open_risk` (PROPOSED 1%).
 - Confidence: high for the rule; values ours.
 
 **CRT-R64. Trade frequency must stay low: about one to two trades a week, at most about one a day; never trade "because the market is open" or out of boredom.**
@@ -1145,7 +1145,7 @@ invalidation:
 risk:
   risk_per_trade: 0.01            # USER: 1% of equity        (CRT-R62)
   instruments: [EURUSD, GBPUSD, XAUUSD]   # USER 2026-11-09; SMT pairs: EURUSD/GBPUSD (+DXY), XAUUSD/XAGUSD
-  daily_loss_limit_r: 1.0         # PROPOSED                  (CRT-R63)
+  daily_loss_limit_r: 2.0         # USER: stop for the NY day at -2% (CRT-R63)
   max_open_risk: 0.01             # PROPOSED
   max_trades_per_day: 1           # (CRT-R64)
   max_trades_per_week: 2
