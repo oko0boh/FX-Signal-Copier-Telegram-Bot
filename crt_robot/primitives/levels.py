@@ -42,7 +42,7 @@ def open_at(df: pd.DataFrame, period: str, weekday: int | None, hour: int, minut
     ny = idx.tz_convert(NY_TZ)
     mins = np.asarray(ny.hour * 60 + ny.minute)
     target = hour * 60 + minute
-    day_ok = np.ones(len(df), bool) if weekday is None else np.asarray(ny.dayofweek == weekday)
+    day_ok = np.ones(len(df), bool) if weekday is None else np.asarray(ny.day_of_week == weekday)
     after = day_ok & (mins >= target)
     group = np.asarray(bucket_keys(idx, period).asi8)
     out = np.full(len(df), np.nan)

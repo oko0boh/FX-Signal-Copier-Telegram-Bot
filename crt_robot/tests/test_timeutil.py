@@ -19,7 +19,7 @@ def test_broker_midnight_is_17_ny_both_seasons():
 def test_round_trip():
     idx = pd.date_range("2024-03-01", "2024-04-01", freq="37min", tz="UTC")
     # skip the Sunday DST hour, market closed anyway
-    idx = idx[~((idx.tz_convert("America/New_York").dayofweek == 6)
+    idx = idx[~((idx.tz_convert("America/New_York").day_of_week == 6)
                 & (idx.tz_convert("America/New_York").hour < 4))]
     back = broker_naive_to_utc(to_broker_naive(idx))
     assert (back == idx).all()

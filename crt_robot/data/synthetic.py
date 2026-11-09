@@ -16,7 +16,7 @@ def fx_minutes(start: str, end: str) -> pd.DatetimeIndex:
     """UTC minute stamps inside the FX week (Sun 17:00 NY to Fri 17:00 NY)."""
     idx = pd.date_range(pd.Timestamp(start, tz=NY_TZ), pd.Timestamp(end, tz=NY_TZ), freq="1min",
                         inclusive="left").as_unit("ns")
-    dow, hour = idx.dayofweek, idx.hour
+    dow, hour = idx.day_of_week, idx.hour
     open_ = ~((dow == 5) | ((dow == 4) & (hour >= 17)) | ((dow == 6) & (hour < 17)))
     return idx[open_].tz_convert("UTC").rename("ts")
 

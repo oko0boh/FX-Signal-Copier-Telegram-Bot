@@ -34,7 +34,7 @@ class QualityReport:
 def in_fx_week(idx: pd.DatetimeIndex) -> np.ndarray:
     """True where a UTC stamp falls in Sun 17:00 NY .. Fri 17:00 NY."""
     ny = idx.tz_convert(NY_TZ)
-    dow, hour = ny.dayofweek, ny.hour
+    dow, hour = ny.day_of_week, ny.hour
     closed = (dow == 5) | ((dow == 4) & (hour >= 17)) | ((dow == 6) & (hour < 17))
     return ~np.asarray(closed)
 

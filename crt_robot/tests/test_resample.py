@@ -28,9 +28,9 @@ def test_daily_opens_17_ny_and_weekly_sunday_17(m1):
     d = resample(m1, "D")
     assert set(_ny(d.index).hour) == {17}
     w = resample(m1, "W")
-    assert (_ny(w.index).dayofweek == 6).all() and set(_ny(w.index).hour) == {17}
+    assert (_ny(w.index).day_of_week == 6).all() and set(_ny(w.index).hour) == {17}
     wc = _ny(pd.DatetimeIndex(w["close_time"]))
-    assert (wc.dayofweek == 4).all() and set(wc.hour) == {17}
+    assert (wc.day_of_week == 4).all() and set(wc.hour) == {17}
     # five broker days per week, Sunday-evening bars belong to Monday's candle
     assert len(d) == 5 * len(w)
 

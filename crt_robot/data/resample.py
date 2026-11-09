@@ -72,7 +72,7 @@ def bucket_keys(index: pd.DatetimeIndex, tf: str) -> pd.DatetimeIndex:
     spec = get_tf(tf)
     naive = _clock_naive(index, spec.clock)
     if spec.floor is None:  # weekly: back to Monday 00:00 on the broker clock
-        return (naive - pd.to_timedelta(naive.dayofweek, unit="D")).normalize()
+        return (naive - pd.to_timedelta(naive.day_of_week, unit="D")).normalize()
     return naive.floor(spec.floor)
 
 
