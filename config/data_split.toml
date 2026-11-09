@@ -1,0 +1,13 @@
+# Data split for all backtests. LOCKED: do not move holdout_start to "make
+# room" for more tuning data. Changing it needs a written reason in
+# docs/PHASE1_REPORT.md (or later reports) and a new locked_on date.
+#
+# Holdout = the last 18 months as of locked_on (2026-11-09 - 18 months =
+# 2025-05-09, rounded down to the month start). Everything before is the
+# tuning period. The holdout is run ONCE, with an explicit flag.
+
+[split]
+data_start = "2015-01-01"
+holdout_start = "2025-05-01"
+holdout_months = 18
+locked_on = "2026-11-09"
