@@ -685,7 +685,7 @@ Notation used in the pseudo-code: `HTF` = the candle timeframe being traded (the
 
 **CRT-R62. Every trade must risk a fixed amount (fixed fraction of equity); the value is not given by either source.**
 - Sources: sham/07 (4:12–4:28: fixed risk per trade, exposure limits, daily loss limit, capital preservation); romeo/16 (13:06–18:24: audit over-leverage / risking too much).
-- Implementation: `size = equity × P:risk_per_trade / |entry - stop|`. Default PROPOSED (not from source): 0.5%.
+- Implementation: `size = equity × P:risk_per_trade / |entry - stop|`. Default: **1% (user decision, 2026-11-09)**.
 - Confidence: high for the rule; the number is ours.
 
 **CRT-R63. The bot must enforce a daily loss limit and an exposure cap.**
@@ -1143,7 +1143,8 @@ invalidation:
   sham_invalid_atr: 1.0           # PROPOSED                  (CRT-R60)
 
 risk:
-  risk_per_trade: 0.005           # PROPOSED (0.5% of equity) (CRT-R62)
+  risk_per_trade: 0.01            # USER: 1% of equity        (CRT-R62)
+  instruments: [EURUSD, GBPUSD, XAUUSD]   # USER 2026-11-09; SMT pairs: EURUSD/GBPUSD (+DXY), XAUUSD/XAGUSD
   daily_loss_limit_r: 1.0         # PROPOSED                  (CRT-R63)
   max_open_risk: 0.01             # PROPOSED
   max_trades_per_day: 1           # (CRT-R64)

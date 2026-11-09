@@ -56,7 +56,10 @@ Before choosing pairs, measure each instrument's behaviour: does it trend or sna
 ## 7. X trader feeds
 Unchanged: browser-read, votes only, and counted only after 30 tracked setups (`research/x-traders/`).
 
+## Decided
+- Instruments: **EURUSD, GBPUSD, XAUUSD (gold)**. SMT comparisons: EURUSD vs GBPUSD (and DXY), gold vs silver (XAGUSD), using data only.
+- Risk: **1% per trade**.
+
 ## Still needed from the user
-- Instruments to trade.
-- Risk per trade and daily loss limit.
+- Daily loss limit (proposed: stop for the day after −2%, i.e. 2 losing trades).
 - Broker (MT4/MT5 via MetaAPI, OANDA, or other) and VPS choice.
