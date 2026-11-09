@@ -64,6 +64,20 @@ TRADE_COLUMNS = ["entry_time", "exit_time", "side", "entry", "exit", "stop", "ta
                  "risk_usd", "pnl", "r", "reason", "tag", "entry_kind", "commission"]
 
 
+class LookAheadRisk(TypeError):
+    """A strategy holds raw price data, which could leak the future."""
+
+
+def check_strategy_holds_no_data(strategy: object, max_len: int = 1000) -> None:
+    """Strategies must read prices only through the Snapshot. A strategy that
+    stores a DataFrame/Series/array (e.g. the full history handed to its
+    constructor) could see the future, and the truncation audit would not
+    notice because that data is not cut. Refuse such strategies."""
+    for name, val in vars(strategy).items() if hasattr(strategy, "__dict__") else []:
+        if isinstance(val, (pd.DataFrame, pd.Series)) or (isinstance(val, np.ndarray) and val.size > max_len):
+            raise LookAheadRisk(f"strategy attribute {name!r} holds price data; read data via the Snapshot")
+
+
 class Backtester:
     def __init__(self, base: pd.DataFrame, instrument: Instrument,
                  htfs: tuple[str, ...] = ("15m", "1H", "4H", "D", "W"),
@@ -94,6 +108,7 @@ class Backtester:
         cfg = self.config
         if self.uses_holdout and not cfg.allow_holdout:
             raise HoldoutLockedError("holdout data without allow_holdout")
+        check_strategy_holds_no_data(strategy)
         inst, spread = self._costs()
         slip = inst.slippage
         o, h, l, c = (self.base[k].to_numpy(dtype=float) for k in ("open", "high", "low", "close"))
