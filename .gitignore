@@ -5,3 +5,9 @@
 research/raw/*
 !research/raw/.gitkeep
 __pycache__/
+
+# CRT robot
+data_cache/
+.pytest_cache/
+*.egg-info/
+.venv/
