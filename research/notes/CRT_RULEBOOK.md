@@ -4,11 +4,11 @@
 
 | Field | Value |
 |---|---|
-| Status | **Draft v0.1**. Not approved. Not yet backtested. |
+| Status | **Draft v0.2**. Not approved. Not yet backtested. (v0.1 of 2026-11-08 merged with the notebook notes; see the changelog at the end.) |
 | Built from | 29 videos: 17 Romeo (creator of CRT) + 12 Sham (CRT/ICT trader), via the 30 notes in `research/notes/crt/romeo/` (18 files, one of which, the CRTology intro, has no transcript) and `research/notes/crt/sham/` (12 files). |
-| Also studied | 3 PDF guides by TradesbyVee / AR (secondary), section 6.2. |
-| Pending | Romeo's book (on sale 1 Feb 2026, `romeo/13-secrets-ep10-clean-close`), remaining CRTology 2026 episodes, the ICT foundation notes (`notes/ict/` is still empty), community notes (Phase 3). |
-| Written | 2026-11-08 |
+| Also studied | 3 PDF guides by TradesbyVee / AR (secondary), section 6.2. **New in v0.2:** the scanned handwritten notebook (268 pages) in `research/notes/crt/books/romeo-book/` (`00-answers.md`, `01-provenance-and-page-map.md`, topic files 02–11), section 6.3. About 60% of it is Sham's course "CRT Unlocked" **[S]**, some is Romeo-family material **[R]** (handwriting, UTS and Secrets-of-Time slides), and some is unattributed "TS/Soup Room" notes **[Room]**. It is **not** Romeo's own published book. |
+| Pending | Romeo's own published book (on sale 1 Feb 2026, `romeo/13-secrets-ep10-clean-close`) is **still not studied**; the notebook above is a different document. Also pending: remaining CRTology 2026 episodes, the ICT foundation notes (`notes/ict/` is still empty), community notes (Phase 3). |
+| Written | 2026-11-08 (v0.1); updated 2026-11-10 (v0.2) |
 
 ### 0.1 How to read this file
 
@@ -23,6 +23,9 @@
 - **P:name** = a backtester parameter (section 7). When a rule depends on a parameter, its name is given.
 - Text marked **PROPOSED (not from source)** is our own suggestion to make something computable. It is not something Romeo or Sham said. Everything else must be traceable to a note.
 - Source priority (from `research/README.md` and the task brief): **Romeo is the source for CRT structure. Sham adds timing, order block (OB) and risk detail. Newer Romeo (CRTology 2026, notes 15–18) beats older Romeo (2025 "CRT secrets" and earlier).**
+- Full order (v0.2): **Romeo videos > Sham videos > ICT > notebook [R] > notebook [S] / [Room] > student PDF guides > community.** A notebook answer changes a v0.1 default only when it fills a hole (a PROPOSED proxy or an unanswered question) or when the higher-ranked sources are split; otherwise it is added as a citation.
+- Notebook citations look like `books/romeo-book p.249 [S]` (page of the scanned PDF, then the provenance tag).
+- **SUPERSEDED (v0.1)** marks an old default that v0.2 replaced. The old text stays for traceability.
 
 ### 0.2 Source keys
 
@@ -49,6 +52,10 @@
 
 Note: romeo/13, romeo/15, sham/07, sham/09, sham/12 contain no strategy rules. They are cited only for routine, risk and meta rules.
 
+| Key | File |
+|---|---|
+| books/romeo-book | `books/romeo-book/00-answers.md` (answer map), `01-provenance-and-page-map.md` (page map and tags), topic files `02-…` to `11-…`. Cited by PDF page and tag [R] / [S] / [Room]. |
+
 ### 0.3 Conventions
 
 **Time zone.** All times are **New York local time** (IANA `America/New_York`, with daylight saving). Romeo: "all New York time, because that's the time the algorithm functions" (romeo/02 22:00). Sham's session times are New York (sham/04 4:34). The data layer must convert broker/server time to NY time before any rule runs.
@@ -59,10 +66,10 @@ Note: romeo/13, romeo/15, sham/07, sham/09, sham/12 contain no strategy rules. T
 |---|---|---|---|
 | 15m, 5m, 1m | standard clock grid (:00, :15, ...) | not discussed; PROPOSED (not from source) | – |
 | 1H | on the hour | not discussed; PROPOSED (not from source) | – |
-| **4H** | **01:00, 05:00, 09:00, 13:00, 17:00, 21:00** | Sham names the "1 a.m.", "5 a.m." and "9 p.m." 4H candles (sham/04 14:59, sham/06 15:33, sham/08 33:22). This is the grid of a broker that closes the day at 17:00 NY (e.g. FTMO MT). | medium (inferred from three named candles; not stated as a rule) |
-| **Daily** | **00:00** (midnight NY) | Romeo: the daily range resets at midnight NY (romeo/02 9:57); a daily candle is "Tuesday midnight to Wednesday midnight" (romeo/12 10:07). | medium. See **C-03**: Sham's 4H grid implies a 17:00 NY daily. |
-| **Weekly** | **open question**, default Monday 00:00 open, Friday 17:00 close | Sunday 17:00 (romeo/02 17:34; romeo/06 18:51; romeo/10 10:54) vs Monday 00:00 (romeo/02 17:49 "true week open"; romeo/03 24:03; romeo/09 14:38). Close Friday 17:00 (romeo/03 24:19) vs Friday 16:00 (romeo/17 17:34). | low. See **C-02**. |
-| Monthly | first calendar day, same open time as the daily | not discussed; PROPOSED (not from source) | – |
+| **4H** | **01:00, 05:00, 09:00, 13:00, 17:00, 21:00** | Sham names the "1 a.m.", "5 a.m." and "9 p.m." 4H candles (sham/04 14:59, sham/06 15:33, sham/08 33:22). This is the grid of a broker that closes the day at 17:00 NY (e.g. FTMO MT). v0.2: stated as the "1-5-9" six-block grid in books/romeo-book p.14, 53 [R], p.211 [Room]. | high (v0.1: medium) |
+| **Daily** | **00:00** (midnight NY) | Romeo: the daily range resets at midnight NY (romeo/02 9:57); a daily candle is "Tuesday midnight to Wednesday midnight" (romeo/12 10:07). v0.2: "mark the 00:00 NY open" books/romeo-book p.56 [R], p.215 [Room]. | medium-high. See **C-03**: Sham's 4H grid implies a 17:00 NY daily (not covered by the notebook). |
+| **Weekly** | **v0.2 default: Sunday 17:00 open (range and open price); the Mon–Fri day sequence starts Monday 00:00; Friday 17:00 close.** SUPERSEDED (v0.1): Monday 00:00 open price. | Sunday 17:00 (romeo/02 17:34; romeo/06 18:51; romeo/10 10:54; books/romeo-book p.54 [R], p.214 [Room]: "buy below Sunday's open") vs Monday 00:00 (romeo/02 17:49 "true week open"; romeo/03 24:03; romeo/09 14:38). Close Friday 17:00 (romeo/03 24:19) vs Friday 16:00 (romeo/17 17:34); the notebook gives no close. | low-medium. See **C-02**. |
+| Monthly | first calendar day, same open time as the daily | not discussed; PROPOSED (not from source). The notebook counts weeks 1–4 of the month but gives no open time (books/romeo-book p.228 [S]). | – |
 
 **Price conventions.**
 - "High" and "low" always mean the wick extremes unless a rule says *body*.
@@ -100,7 +107,7 @@ Computable: `CR(c) = [c.low, c.high]`.
 Computable: `crt_high = C1.high`, `crt_low = C1.low`.
 
 **DEF-03 CRT 50% / equilibrium (EQ).**
-- *CRT 50%*: the midpoint of C1's full wick range (romeo/02 16:48; romeo/05 6:52; romeo/11 12:17). `crt_50 = (C1.high + C1.low) / 2`. That it uses the full wick range is our reading (romeo/02 open question); confidence medium.
+- *CRT 50%*: the midpoint of C1's full wick range (romeo/02 16:48; romeo/05 6:52; romeo/11 12:17). `crt_50 = (C1.high + C1.low) / 2`. That it uses the full wick range was our reading (romeo/02 open question). v0.2: confirmed, the CRT range is "the whole candle including wicks" and the 50% is measured on it (books/romeo-book p.249 [S]; Q7). Confidence medium → high.
 - *Dealing-range EQ*: the 50% of a dealing range (DEF-19) (sham/08 23:31). `eq = (dr.high + dr.low) / 2`.
 
 **DEF-04 Sweep / purge / stab.** Price trades beyond a prior high or low. Romeo says "stab", "turtle soup" or "liquidate"; Sham says "purge".
@@ -138,7 +145,7 @@ Computable PROPOSED (not from source): `swing_high(tf, i, P:swing_n)` that is `u
 **DEF-09 Thick candle.** Romeo insists the model candle must be thick; a "flimsy" one is weaker (romeo/02 38:15; romeo/03 11:42). No number is given.
 PROPOSED (not from source): `thick(c) := body(c)/range(c) >= P:thick_body_ratio (0.6) and range(c) >= P:thick_atr_mult (1.0) * atr(tf,14)`.
 
-**DEF-10 True market structure shift (true MSS).** Bullish: low → high → lower low (the stab into the old low / TS) → a **close above "the high that broke the low"**, i.e. the swing high that formed just before the lower low (romeo/06 11:52; romeo/08 13:51; romeo/11 9:17; romeo/12 8:46, 15:28). Romeo uses "breaker" for the same event (romeo/06 17:39). Bearish: mirror.
+**DEF-10 True market structure shift (true MSS).** (v0.2: "market shift" = one close beyond the important high/low, i.e. the high that broke a low; preferably with displacement, then consolidation, retracement and a second leg, books/romeo-book p.45–46 [R]. Matches this definition.) Bullish: low → high → lower low (the stab into the old low / TS) → a **close above "the high that broke the low"**, i.e. the swing high that formed just before the lower low (romeo/06 11:52; romeo/08 13:51; romeo/11 9:17; romeo/12 8:46, 15:28). Romeo uses "breaker" for the same event (romeo/06 17:39). Bearish: mirror.
 ```text
 L1 = swing low; H = swing high after L1; L2 = new low < L1 (the sweep), formed after H
 true_mss_bull at bar t := t.close > H.high, t after L2, and no close below L2 between L2 and t
@@ -157,7 +164,7 @@ leg1_end   = lowest low after activation, before retrace begins   # PROPOSED def
 zone = [leg1_end + 0.50*(leg1_start-leg1_end), leg1_end + 0.79*(leg1_start-leg1_end)]   # P:ote_zone
 ```
 
-**DEF-13 Kiss of death (two different meanings, keep apart).**
+**DEF-13 Kiss of death (two different meanings, keep apart).** (v0.2: the notebook uses the Romeo meaning, "the last turtle soup before the opposing DOL or the opposite extreme", as the candle-3 entry; no real-time rule, books/romeo-book p.250–252 [S].)
 - **KoD-R (Romeo)**: "the final turtle soup before the target is hit" (romeo/05 6:20; romeo/06 8:26; romeo/10 14:29). A fake reversal that traps counter-trend traders, usually followed by a fast move into the target (romeo/04 0:32). Also the last sweep into a key level before the true reversal (romeo/08 15:13). It can coincide with the OTE (romeo/06 18:16; romeo/10 17:16).
 - **KOD-S (Sham)**: the "kiss of death sequence", "the last distribution leg inside of a bearish market maker model": price is very close to the HTF draw on liquidity, pauses, forms SMT, and makes a small retracement that **ends in discount** (bearish case) instead of rebalancing the dealing range to premium (sham/01 10:26–13:07; sham/06 20:36). It is "the only exception" to the rebalance rule (CRT-R16).
 
@@ -170,9 +177,11 @@ zone = [leg1_end + 0.50*(leg1_start-leg1_end), leg1_end + 0.79*(leg1_start-leg1_
 | CRT high / CRT low | romeo/18 10:50 |
 | Sham's set: **order blocks, fair value gaps, significant highs/lows** | sham/10 7:44 |
 | Sham's examples: HTF FVG, OB, rejection block, previous week high/low | sham/02 2:45; sham/08 2:53 |
-How to choose *the correct* key level is **not taught** (romeo/13 9:16; romeo/10). See G-01.
+| **v0.2: BOS-origin high/low**: the low that broke a high / the high that broke a low (a swing that created a break of structure). "The important highs and lows are the ones that broke structure." | books/romeo-book p.4–5, 45 [R] |
+| v0.2: HTF highs/lows (D/W/M), FVG, breaker, OB, rejection block, "all other HTF PD arrays"; old lows of the month/week/day | books/romeo-book p.83, 205 [S]; p.11 [R] |
+How to choose *the correct* key level is **not taught** (romeo/13 9:16; romeo/10). See G-01. The notebook gives only an "order of importance" for HTF bias (highs, lows, FVGs, opens, closes; books/romeo-book p.60 [R]), the TF-step table (p.205 [S], CRT-R22) and "a key level only matters if an entry model forms there" (p.205 [S]); no ranking algorithm.
 
-**DEF-15 Order block (OB), Sham's definition.** "A single candle or a group of consecutive candles that either fill liquidity or purge liquidity and then gets engulfed at a key time" (sham/02 1:55).
+**DEF-15 Order block (OB), Sham's definition.** (v0.2: same definition in books/romeo-book p.83, 107 [S], with one extra extent case: if the wick is clearly larger than the body, use the wick, p.109–111 [S].) "A single candle or a group of consecutive candles that either fill liquidity or purge liquidity and then gets engulfed at a key time" (sham/02 1:55).
 - *Fill liquidity*: the candle(s) trade into a pre-existing HTF key level (FVG, rejection block, OB) (sham/02 2:45).
 - *Purge liquidity*: the candle(s) take a meaningful HTF high/low (swing, range low, CRT low) (sham/02 3:01). Also counts if a correlated asset purges its matching level (SMT purge, sham/02 8:42).
 - *Engulfment*: bullish OB = a later candle **closes above** the OB candle(s); bearish = closes below. "Ideally" in a key time (sham/02 3:48).
@@ -206,7 +215,7 @@ smt_bull(t, A, B, level_A, level_B):   # same bar t on both assets
 ```
 Whether "took the low" means wick or close is not stated (romeo/09 open question). Default: wick (P:smt_take = wick).
 
-**DEF-19 Dealing range (DR).** Sham: the most recent **expansion swing** on the TF in question, swing high to swing low (sham/01 7:00; sham/08 23:31). It is the *relevant* dealing range only if it holds **unfilled liquidity** (an untested FVG/OB) (sham/03 14:19), and it is confirmed only after a counter-direction CSD (D1 or H4; H4 is the lowest TF allowed for a D1 range) (sham/03 15:55, 34:41). It is re-anchored as new swings form (sham/06 12:35). Swing algorithm: see G-09.
+**DEF-19 Dealing range (DR).** (v0.2: "when price takes out both a swing low and a swing high and then makes an expansion swing, that swing is the dealing range"; no FVG condition is stated, books/romeo-book p.96 [S]. See G-09.) Sham: the most recent **expansion swing** on the TF in question, swing high to swing low (sham/01 7:00; sham/08 23:31). It is the *relevant* dealing range only if it holds **unfilled liquidity** (an untested FVG/OB) (sham/03 14:19), and it is confirmed only after a counter-direction CSD (D1 or H4; H4 is the lowest TF allowed for a D1 range) (sham/03 15:55, 34:41). It is re-anchored as new swings form (sham/06 12:35). Swing algorithm: see G-09.
 
 **DEF-20 Premium / discount.** Above the dealing-range EQ = premium; below = discount (sham/08 23:31). Romeo: "buy low, sell high" (romeo/01 20:07); "never buy above a high or sell below a low" (romeo/02 28:17).
 `premium(p) := p > eq`, `discount(p) := p < eq`.
@@ -223,6 +232,7 @@ Whether "took the low" means wick or close is not stated (romeo/09 open question
 | London close killzone | 10:00–12:00 | 11:00 |
 Index futures (NQ/ES/YM): NY AM 08:30–11:00; NY lunch 12:00–13:00; NY PM 13:30–16:00; macros 08:30, 09:30 and others (sham/04 6:08).
 Macro length is not given. PROPOSED (not from source): macro = `[HH:00, HH:59]` (P:macro_window).
+v0.2 (books/romeo-book p.228, 258 [S]): London lunch 05:00–07:00; **refined key times 03:00–04:00, 06:00–07:00, 08:30–09:30, 10:00–11:00**; **purge key hours 01, 03, 06, 08, 09, 11** (a CRT must be formed at key times and purged at key times). Intraday high-probability times 03:00–05:00 and 09:00–11:00 NY (p.28 [R]). Macro windows (minutes) are still not covered.
 Romeo talks about "time" ("where time meets price", "correct time") but gives no intraday window in these notes (romeo/06 12:28; romeo/08 13:51). His only stated session is London on a Tuesday (romeo/12 15:28).
 
 **DEF-23 Sessions.** Asia = 20:00–00:00 NY, a range that frames the day for EU/GU (it can expand on JPY pairs) (sham/04 5:06). London opens 02:00. New York killzone 07:00. Daily candle = 00:00 NY (romeo/02 9:57).
@@ -236,18 +246,19 @@ Romeo talks about "time" ("where time meets price", "correct time") but gives no
 Sham: the number of candles (2–5) does not matter; context and timing come first (sham/05 28:33).
 
 **DEF-25 Market profile.** *Romeo*: reading the sequence of highs and lows, which are swept and which are broken (romeo/12 8:46); called "one of the most crucial elements" but not explained (romeo/16 23:33). Bearish continuation profile: highs keep getting turtle-souped and lows keep breaking (romeo/14 12:03). *Sham*: four "market profiles": expansion, retracement, consolidation, manipulation; trade only in expansion toward the HTF DOL (sham/01 2:09, 5:56). See G-04.
+*v0.2 (notebook)*: **five** phases: consolidation/range, manipulation, expansion, retracement, reversal (books/romeo-book p.254 [S]), plus a table mapping last profile + key level to the next outcome (p.87 [S], see G-04). Trend = highs broken and lows rejected (bull), range = both rejected (p.198 [Room], p.45 [R]); this matches Romeo's swept-vs-broken reading.
 
 **DEF-26 Relatively equal highs/lows.** Two or more swing highs/lows at about the same price, treated as a liquidity pool / target (romeo/09 24:15; romeo/14 0:52). PROPOSED (not from source): within `P:equal_tol_atr (0.1) × atr(14)`.
 
 **DEF-27 Mother candle (inside-bar rule).** If the latest candles sit inside an earlier candle, use the outer candle as the CRT (sham/08 30:40).
 
-**DEF-28 Rejection block.** "A turtle soup of the body"; usually creates a retracement before price attacks the high (romeo/17 20:41). Not used as a rule input in v0.1 (see G-19).
+**DEF-28 Rejection block.** "A turtle soup of the body"; usually creates a retracement before price attacks the high (romeo/17 20:41). Not used as a rule input in v0.1 (see G-19). v0.2: the notebook lists it as a key level and says it "works with SMT" but defines it nowhere (books/romeo-book p.18–19 [R], p.255 [S]).
 
 **DEF-29 Failure swing.** After the TS low, price drops back almost to that low once more before rallying (romeo/02 33:29). Not used as a rule input in v0.1.
 
 **DEF-30 Refined OB.** The single candle inside a multi-candle OB that actually did the purge, or only the part of the OB in the correct premium/discount half (sham/02 27:01, 37:59).
 
-**DEF-31 Weekly time theory.** Romeo: weekly open Monday midnight, close Friday 17:00; in a bearish week the high forms Mon/Tue/Wed and the low Thu/Fri; typical: fake high Monday, real high Tuesday with model #1, decline into Thu/Fri; "Thursday plus model one" is the highest-probability point (romeo/03 23:11–26:28). Bullish template: Monday opens, Tuesday drops into a range and a TS, then higher (romeo/16 8:48; romeo/17 7:26).
+**DEF-31 Weekly time theory.** (v0.2: the notebook puts the weekly open at Sunday 17:00, books/romeo-book p.54 [R], p.214 [Room]; see C-02. Low of the week Mon–Wed, opposite end Thu/Fri, p.53 [R]; Wednesday almost never makes both extremes, p.212 [Room].) Romeo: weekly open Monday midnight, close Friday 17:00; in a bearish week the high forms Mon/Tue/Wed and the low Thu/Fri; typical: fake high Monday, real high Tuesday with model #1, decline into Thu/Fri; "Thursday plus model one" is the highest-probability point (romeo/03 23:11–26:28). Bullish template: Monday opens, Tuesday drops into a range and a TS, then higher (romeo/16 8:48; romeo/17 7:26).
 
 ---
 
@@ -260,6 +271,7 @@ Notation used in the pseudo-code: `HTF` = the candle timeframe being traded (the
 **CRT-R01. Before any pattern or entry, the bot must name the HTF candle it is trading** (e.g. "the daily CRT inside the weekly candle"); the entry model is the last thing considered.
 - Sources: romeo/07 (5:33–5:49, 14:26); romeo/10 (11:44–12:31); romeo/12 (8:02, 9:30); sham/08 (1:19, 1:50).
 - Implementation: every setup object carries `htf`, `ltf`, `purpose ∈ {bias, framing, trade}` and `parent_htf` (the candle it sits inside). A signal without these fields is rejected.
+- v0.2 support: "CRT is never a standalone pattern"; pick one style and one TF pair and master it (books/romeo-book p.52 [R], p.89, 248, 253 [S]).
 - Confidence: high.
 
 **CRT-R02. The HTF candle must be 4H, daily or weekly; it must not be below 4H.** Monthly and above only in an "advanced" mode. 1H only for "hyper scalpers".
@@ -270,6 +282,7 @@ Notation used in the pseudo-code: `HTF` = the candle timeframe being traded (the
 **CRT-R03. Each HTF must use its paired LTF for the entry model.** Default pairs (Romeo, model #1 "golden rule"): **Monthly → Daily, Weekly → 4H, Daily → 1H, 4H → 15m.**
 - Sources: romeo/03 (16:49–17:22, 28:25); romeo/05 (6:03); alternatives in romeo/02 (5:30–6:23: M→4H, W→1H, D→15m, 4H→5m, "for viewing the PO3"); romeo/12 (daily trade, 5m entry); sham/01, sham/06, sham/11 (D1 → H4 → M15).
 - Implementation: `ltf = P:tf_pairs[htf]`. Default `{M: D, W: 4H, D: 1H, 4H: 15m}`. Romeo says no alignment is fixed (romeo/02 7:46), so keep this a parameter.
+- v0.2: the notebook has no execution table like (a) or (b). Its tables are by style (books/romeo-book p.91 [S]: swing M/D/H4, short term W/H4/H1, intraday D–H4/H1/M15, scalp M15/M5/M1), key level vs profiling (p.87 [S]: D/H1, H4/M15, H1/M5, M15/M1) and the D→4H→15m plan (p.73, 253, 264 [S]). Added as variant `tf_pairs` alternatives; default unchanged (Romeo videos rank higher).
 - Confidence: medium (three different tables exist; see C-01).
 
 **CRT-R04. In the Sham stack each timeframe must have one job: D1 = bias, H4 = context + candle range (framing CRT), M15 = entry confirmation. The jobs must not be mixed.**
@@ -280,6 +293,7 @@ Notation used in the pseudo-code: `HTF` = the candle timeframe being traded (the
 **CRT-R05. A LTF CRT must only be traded in the direction of the HTF CRT that contains it** (from the HTF sweep extreme, "point A", toward the HTF target).
 - Sources: romeo/09 (15:31–17:50: "LTF CRT forming inside a HTF CRT"); romeo/11 (13:51–16:56, failure case 3); sham/05 (5:51).
 - Implementation: `allowed(ltf_setup) := ltf_setup.dir == parent_htf_crt.dir` while `parent_htf_crt.state == active` (not yet at its final target). Counter-direction CRTs "sometimes work" but are excluded by default (`P:allow_counter_htf = false`).
+- v0.2 support: IF-THEN principle (HTF bull → LTF breaks highs, rejects lows) and "do not trade counter-expansion" (books/romeo-book p.38 [R], p.200 [Room], p.67–68 [R], p.101 [S]).
 - Confidence: high.
 
 ### B) Higher-timeframe bias
@@ -404,6 +418,7 @@ Notation used in the pseudo-code: `HTF` = the candle timeframe being traded (the
   )   # which members are enabled: P:kl_types
   ```
   Which wick to use when a week has both is not stated (romeo/17 open question); default: the lower wick for bull, upper for bear (PROPOSED, not from source).
+  v0.2 addition: `bos_origin_hl` = a swing high/low on tf that created a break of structure (the low that broke a high / the high that broke a low), unswept (books/romeo-book p.4–5 [R]: "the condition for a key level is that the high or low created the BOS"). Also a breaker type as a variant (p.84, 205 [S]). A level must also allow an entry model to form there (p.205 [S]); that is already enforced by CRT-R37.
 - Confidence: medium (each type is sourced; the selection among them is a gap, G-01).
 
 **CRT-R20. The bot must not buy bullish CRTs or bullish MSS that form on the way down before price has touched the bullish key level; the first bottoming pattern above the level is assumed fake.** Mirror for bearish.
@@ -413,13 +428,15 @@ Notation used in the pseudo-code: `HTF` = the candle timeframe being traded (the
 
 **CRT-R21. A bearish CRT/OB must sit at a premium key level and a bullish one at a discount key level of the relevant dealing range** ("buy low, sell high").
 - Sources: romeo/01 (20:07); romeo/02 (28:17); sham/05 (2:54, 7:10, 8:30); sham/11 (11:24); sham/02 (13:12 factor 4); sham/08 (2:53).
+- v0.2 support: bullish draw trades only from discount, bearish only from premium; never enter in the middle of a range, the extremes are the playground (books/romeo-book p.36 [R], p.98–101 [S]). New PROPOSED gate `P:mid_range_block = [0.4, 0.6]` (G-26).
 - Implementation: bearish: `C1.high >= dr.eq` (or `kl > dr.eq`); bullish: `C1.low <= dr.eq`. In Romeo mode, PROPOSED (not from source): use the parent HTF candle's 50% as EQ when no dealing range is defined.
 - Confidence: high.
 
 **CRT-R22. The key level's timeframe sets the timeframe of the expansion it produces:** monthly KL → weekly expansion; weekly KL → daily; daily KL → 4H; 4H KL → 1H or 15m.
 - Sources: romeo/17 (8:16–8:52, CRTology).
-- Implementation: `kl.tf` must be `P:kl_tf_for_htf[htf]`, default `{W: M, D: W, 4H: D, 1H: 4H}` (inverse of Romeo's map). Used to pick which key levels feed CRT-R18.
-- Confidence: medium (see C-01: a fourth TF table).
+- Implementation: `kl.tf` must be `P:kl_tf_for_htf[htf]`, default `{W: M, D: W, 4H: D, 1H: 4H, 15m: 1H}` (inverse of Romeo's map; 15m added in v0.2). Used to pick which key levels feed CRT-R18. v0.2: a secondary TF two steps up is also allowed (`P:kl_tf_secondary`, e.g. 4H CRT → daily level, plus weekly).
+- v0.2 source: the CRT → key-level table 15m→1h(+4h), 1h→4h(+D), 4h→D(+W), D→W(+M), W→M(+Y) (books/romeo-book p.205 [S]) matches this rule exactly.
+- Confidence: high (v0.1: medium; see C-01).
 
 **CRT-R23. If price tags the planned key level before the CRT candle exists, or outside a key time, or misses the key level entirely, there must be no entry from it.**
 - Sources: sham/05 (3:26–4:14, 17:38–18:58); sham/04 (13:56–14:12).
@@ -445,6 +462,7 @@ Notation used in the pseudo-code: `HTF` = the candle timeframe being traded (the
       if cls == inside:  keep C1, wait for next candle (CRT-R26)
   ```
   Whether this close-back-inside is required on the 4H depends on mode (CRT-R29).
+  v0.2 (Q8): the close back inside is preferred at C2's own close, but not forced: a C2 close outside gives "lower odds, range still stands, caution" (books/romeo-book p.249 [S]). Romeo handwriting agrees that a close beyond is a true break (p.10 [R]). Romeo mode keeps the drop; where `require_close_inside` is false the close inside becomes a score factor (C-04).
 - Confidence: high.
 
 **CRT-R26. If the newest candles are inside an earlier candle, the outer (mother) candle must be used as C1;** "C1, inside bars, then turtle soup" is the same CRT.
@@ -468,16 +486,18 @@ Notation used in the pseudo-code: `HTF` = the candle timeframe being traded (the
   on invalidation of c (CRT-R32, CRT-R60): pick next candidate in the same day
   ```
   The open list is PROPOSED from Sham's named examples (21:00, 01:00, 05:00), not a stated rule.
+  v0.2 variant `P:framing_model = room_5am` (G-07; books/romeo-book p.201, 211 [Room]): the 05:00 4H candle is the CRT; mark a 15m CRT at its high/low; the purge must happen in the 09:00 hour and is accepted until 10:30; entry on the close of the 2nd 15m candle after the purge, or on a 15m/5m OB. The 01:00 and 09:00 4H blocks are named the best (p.14 [R], p.211 [Room]).
 - Confidence: medium ("which candle makes the most sense" is partly a gap, G-07).
 
 **CRT-R29. On D and W the sweep candle must close back inside the CRT range (both sources). On 4H, Romeo mode must require it; Sham mode must not (Sham confirms the 4H CRT on the 15m instead).**
 - Sources: romeo/02 (2:04–2:38, TS definition for every candle); romeo/07 (6:40–7:30, every TF works the same); sham/08 (20:19, 34:09: "the 4H candle does not need to close back inside"); sham/11.
-- Implementation: `P:require_close_inside = {W: true, D: true, 4H: true}` in Romeo mode; `{W: true, D: true, 4H: false}` in Sham mode.
+- Implementation: `P:require_close_inside = {W: true, D: true, 4H: true}` in Romeo mode; `{W: true, D: true, 4H: false}` in Sham mode. v0.2: where it is false, a close back inside adds +1 to the setup score (`P:close_inside_score = true`, C-04).
 - Confidence: high for each source's own position (see C-04).
 
 **CRT-R30. The bot must enter only in candle 3 or later (after C2 has closed); entries inside C2 must be disabled by default.**
 - Sources: romeo/06 (1:10–2:14, 5:50–6:59); romeo/09 (5:51); romeo/10 (4:43); romeo/02 (27:11 "avoid trades in C2 if you can"; 37:21 C2 entries are "most advanced").
 - Implementation: `entry_time >= C2.close_time` unless `P:allow_c2_entry = true`. Romeo mode only; Sham's framing CRT has no C2/C3 split (sham/05 28:33).
+- v0.2 support: candle 3 for most traders ("confirmational CRT"); candle-2 entries are "advanced" (books/romeo-book p.200, 262–263 [S]).
 - Confidence: high.
 
 **CRT-R31. Only CRTs in the bias direction must be considered; with a bearish bias, bullish CRTs (purges of lows) are ignored.**
@@ -496,6 +516,7 @@ Notation used in the pseudo-code: `HTF` = the candle timeframe being traded (the
       if not in_key_time(bar.open_time): crt.state = invalid   # then CRT-R28 may re-select the next 4H candle
   ```
   Default killzones: London 02:00–05:00, NY 07:00–10:00, London close 10:00–12:00. Default macros: 03:00, 06:00, 09:00, 11:00 (06:00 see C-15).
+  v0.2: a purge also counts as timed if it falls in a **purge key hour** `P:purge_hours = [01, 03, 06, 08, 09, 11]` (books/romeo-book p.258 [S]); refined key times `P:refined_key_times` (03–04, 06–07, 08:30–09:30, 10–11, p.228 [S]) are logged and scored. A 01:00 purge is timed, but in Sham mode CRT-R34 still blocks entries before 02:00.
 - Confidence: high.
 
 **CRT-R33. In Sham mode the entry order block must form inside a key time; otherwise the idea is invalidated. Price at the key level in key time is not enough: an OB (or FVG) must form.**
@@ -510,12 +531,14 @@ Notation used in the pseudo-code: `HTF` = the candle timeframe being traded (the
 
 **CRT-R35. In Romeo mode the bot should prefer setups that follow the weekly template: Monday chop/consolidation, Tuesday stab into the key level via a turtle soup of the consolidation, expansion Wednesday to Friday.**
 - Sources: romeo/17 (7:26–7:59, 10:27, 22:06); romeo/16 (8:48, 15:17); romeo/03 (24:35–26:28); romeo/12 (10:07, 15:28: Tuesday London entry).
+- v0.2: same template in the notebook as the "Monday range model" / "three-candle formation": Monday range, Tuesday manipulation, Wednesday expansion; **if Monday is an expansion, do nothing**; if Monday or Tuesday closes beyond the range, go with the order flow (books/romeo-book p.13, 21–23 [R], p.118 [S]). New filter `P:skip_if_monday_expansion = true` (G-26).
 - Implementation: tag every setup with `weekday(sweep_bar)`; filter `P:romeo_sweep_days` (default `[Mon, Tue, Wed]`) and log results by weekday. The intraday window Romeo uses is not stated; PROPOSED (not from source): reuse Sham's killzones as an optional filter (`P:romeo_use_killzones = false`).
 - Confidence: medium.
 
 **CRT-R36. If the HTF manipulation (sweep) happened at the end of the previous HTF candle, the bot must expect the next candle to distribute quickly with only minimal manipulation** (e.g. a Friday sweep for a weekly).
 - Sources: romeo/09 (7:31–8:05, 10:04–10:35).
 - Implementation PROPOSED (not from source): `late_manip := sweep_time >= prev.open + P:late_frac (0.8) × duration(prev)`. If true, allow entries from the first LTF trigger after the new candle opens without waiting for a fresh sweep of the new candle's opposite side.
+- v0.2: **the default timing proxy (G-23) is reversed.** The notebook says high-probability turtle soups form at the **open of a new candle**, not at the end of the old one, and accelerate fast (books/romeo-book p.40, 41 [R], p.208 [Room]). New default `P:ts_timing_mode = open_of_new`: a sweep inside the first `P:ts_at_open_frac (0.2, PROPOSED)` of the HTF candle's duration is tagged `ts_at_open` and scores +1 (CRT-R46). The romeo/09 late-manipulation reading stays as the variant `ts_timing_mode = late_of_prev` (this rule). Both readings can be true at once (late sweep of candle N, fast distribution at the open of N+1), so the backtest logs both tags.
 - Confidence: low.
 
 ### F) Entry models
@@ -587,7 +610,8 @@ Notation used in the pseudo-code: `HTF` = the candle timeframe being traded (the
 
 **CRT-R44. In candle 3, a bearish entry must be above C3's open and a bullish entry below C3's open.**
 - Sources: romeo/02 (21:11–22:48; he mis-says "sell below" at 22:32); romeo/10 (24:16); romeo/07 (8:40–8:57, candle anatomy: open, move against, then expansion).
-- Implementation: `bear: entry_price > C3.open`; `bull: entry_price < C3.open`. Weekly variant: use the Monday 00:00 open (romeo/02 21:44; C-02).
+- Implementation: `bear: entry_price > C3.open`; `bull: entry_price < C3.open`. Weekly variant: use the weekly open `P:week_open` (v0.2 default Sunday 17:00, "buy below Sunday's open", books/romeo-book p.214 [Room]; SUPERSEDED (v0.1): the Monday 00:00 open, romeo/02 21:44; see C-02).
+- v0.2 support: "bullish: look for the turtle soup below the candle's open; bearish: above it" (books/romeo-book p.41, 43 [R], p.200 [Room]); "A Quick Buck": buy below the open at a bullish key level (p.29, 31 [R]).
 - Confidence: high.
 
 **CRT-R45. The bot must not chase: if candle 3 does not give the planned entry, skip; if a later-stage entry (breaker/OTE) has already been hit, the bot must not look for the first-stage entry (TS / model #1).**
@@ -598,6 +622,8 @@ Notation used in the pseudo-code: `HTF` = the candle timeframe being traded (the
 **CRT-R46. Confluence scoring: an entry should be ranked higher when** the model candle comes with an FVG (Romeo), and an OB should stack Sham's five probability factors (HTF bias/DOL alignment, at a HTF key level, SMT, correct premium/discount half, formed at a key time).
 - Sources: romeo/03 (15:59, 20:38–21:12, 27:53); romeo/05 (17:36–18:12: FVG above an old high supports the KoD sell); sham/02 (13:12–17:43).
 - Implementation: `score = sum(factors)`; `P:min_confluence` (default: no hard filter in v0.1; log the score). FVG "with" the model candle PROPOSED (not from source): an FVG whose middle bar is M or T, within 3 bars.
+- v0.2 scoring additions (each +1, logged): C2 closed back inside C1 where that is not required (`P:close_inside_score`, C-04; books/romeo-book p.249 [S]); key level is a BOS-origin high/low (G-01; p.4–5 [R]); sweep at the open of the new candle (G-23; p.40, 208); purge in a purge key hour (G-11; p.258 [S]); SMT at the key level (C-24; p.178 [S]).
+- v0.2 hard gate (G-20): at least `P:min_confirmations` (3) of {timed CRT, timed purge, HTF key level, inside bars, LTF CRT inside the HTF CRT} (books/romeo-book p.201, 203 [Room]). The HTF key level is already required by CRT-R18.
 - Confidence: medium.
 
 **CRT-R47. For longs the bot must not enter at the part of an OB that lies in premium of a just-formed dealing range; wait for the discount part (mirror for shorts).**
@@ -615,6 +641,7 @@ Notation used in the pseudo-code: `HTF` = the candle timeframe being traded (the
 **CRT-R49. Model #1 stop must be at the opposite extreme of the model candle** (bullish: below `M.low`; bearish: above `M.high`).
 - Sources: romeo/03 (10:34, 20:20).
 - Implementation: `stop = M.low - P:stop_buffer_ticks` (buffer default 0; PROPOSED, not from source).
+- v0.2: the notebook puts the stop at "the swing high/low that formed into the key level" (books/romeo-book p.27 [R]); for a down-close model candle that stabbed the low this is the same price as `M.low` in most cases. Stops that are too tight get hit (p.69 [R]); no buffer number given.
 - Confidence: high.
 
 **CRT-R50. Turtle-soup, true-MSS and KoD-R entries must place the stop beyond the turtle-soup (sweep) extreme.**
@@ -625,6 +652,7 @@ Notation used in the pseudo-code: `HTF` = the candle timeframe being traded (the
 **CRT-R51. Sham OB entries must place the stop just beyond the order block** (shorts: above `ob_top`; longs: below `ob_bottom`).
 - Sources: sham/01 (18:56); sham/02 (31:52); sham/05 (22:08); sham/06 (11:32, 16:52); sham/08 (37:52); sham/11 (13:31).
 - Implementation: `stop = ob_bottom - buffer` (long). The OB extent (body vs wick) follows DEF-15.
+- v0.2: weekly-model stop variant: beyond the week-2 / Tuesday / London high or low (books/romeo-book p.7 [R]) → `P:stop_mode = weekly_model_extreme`.
 - Confidence: high.
 
 **CRT-R52. Alternative stop (Romeo, CRTology): in bullish markets the low that filled a daily FVG may be used as the stop.**
@@ -637,6 +665,7 @@ Notation used in the pseudo-code: `HTF` = the candle timeframe being traded (the
 **CRT-R53. Romeo mode targets must be: TP1 = the CRT 50%, where a partial is always taken; TP2 = the opposite extreme of C1.**
 - Sources: romeo/02 (16:48–18:38, 28:00–28:17, 29:23–29:40: the 50% is "the correct technical target", not the nearest FVG); romeo/05 (6:52–7:08); romeo/10 (12:31, 24:33); romeo/11 (12:17–13:36); romeo/09 (16:12, 19:04, 20:08); romeo/06 (13:00: 50%, then old highs, then CRT high); romeo/18 (11:06).
 - Implementation: `tp1 = crt_50` with `P:tp1_fraction` (default 0.5); `tp2 = crt_low` (bear) / `crt_high` (bull). If entry is already past 50% (e.g. a late KoD-R entry), the only target is TP2.
+- v0.2 sources: TP1 = 50% of the range, partial **always** taken ("take 50% off at the 50%"); TP2 = opposite end (books/romeo-book p.9, 19, 21, 36 [R], p.152, 249 [S]). The 0.5 partial size is now sourced (was PROPOSED). Also: exit or take a partial when an opposing key level is reached (p.162 [S]) → variant `target_mode = opposing_kl`.
 - Confidence: high.
 
 **CRT-R54. Optional Romeo intermediate targets may be used for the partials: the body of the high that started the decline into the OTE zone ("most guaranteed"); the last high before the dump into the old low ("the high that broke the low"); "highs/lows one by one" (successive opposing swing points); relatively equal highs/lows on the way; the previous day's high when the turtle soup was not convincing.**
@@ -685,17 +714,19 @@ Notation used in the pseudo-code: `HTF` = the candle timeframe being traded (the
 
 **CRT-R62. Every trade must risk a fixed amount (fixed fraction of equity); the value is not given by either source.**
 - Sources: sham/07 (4:12–4:28: fixed risk per trade, exposure limits, daily loss limit, capital preservation); romeo/16 (13:06–18:24: audit over-leverage / risking too much).
-- Implementation: `size = equity × P:risk_per_trade / |entry - stop|`. Default: **1% (user decision, 2026-11-09)**.
+- Implementation: `size = equity × P:risk_per_trade / |entry - stop|`. Default: **1% (user decision, 2026-11-09)**. Unchanged in v0.2.
+- Reference only (v0.2): the notebook's conservative model risks 0.5% per trade (40% win rate, average 3R, 10% max drawdown, risk of ruin ~3.62%); prop-firm phases 1% / 1% / 0.5% (books/romeo-book p.243, 264 [S]). Not adopted: the user's decision stands.
 - Confidence: high for the rule; the number is ours.
 
 **CRT-R63. The bot must enforce a daily loss limit and an exposure cap.**
 - Sources: sham/07 (4:12–4:28).
-- Implementation: stop opening trades for the NY day once `realized_pnl_day <= -P:daily_loss_limit` (default **2% of equity = 2R at 1% risk**, user decision 2026-11-09); `open_risk_total <= P:max_open_risk` (PROPOSED 1%).
+- Implementation: stop opening trades for the NY day once `realized_pnl_day <= -P:daily_loss_limit` (default **2% of equity = 2R at 1% risk**, user decision 2026-11-09, unchanged in v0.2); `open_risk_total <= P:max_open_risk` (PROPOSED 1%). The notebook gives no daily loss limit or max open risk (books/romeo-book p.243 [S]).
 - Confidence: high for the rule; values ours.
 
 **CRT-R64. Trade frequency must stay low: about one to two trades a week, at most about one a day; never trade "because the market is open" or out of boredom.**
 - Sources: romeo/07 (11:17); romeo/16 (13:06–15:54); sham/09 (0:00–1:22: 5 trades in a month).
 - Implementation: `P:max_trades_per_day = 1`, `P:max_trades_per_week = 2`. Backtest flag: if signals per week ≫ 2, filters are looser than the sources' (sham/09 implication).
+- Reference only (v0.2): the notebook's risk model assumes 3–4 trades a week (books/romeo-book p.243, 264 [S]); its "10 high-probability / 25 good setups a week" (p.53 [R], p.211 [Room]) is rejected as in 6.2. Default stays 2/week (Romeo/Sham videos rank higher); 4/week is a backtest variant.
 - Confidence: medium.
 
 **CRT-R65. After a HTF CRT is complete, or after the day's objective is reached, the bot must stop trading that setup/day and wait for the next one.**
@@ -705,6 +736,7 @@ Notation used in the pseudo-code: `HTF` = the candle timeframe being traded (the
 
 **CRT-R66. On high-impact news days (FOMC named) the bot must be risk-off.**
 - Sources: sham/06 (17:54–18:11).
+- v0.2: the notebook only says "use the news calendar" (books/romeo-book p.117 [S]); no event list or window.
 - Implementation: `no_trades if date in news_calendar(P:news_events = [FOMC])`. The window (whole day vs ±N hours) is not stated; default whole NY day (PROPOSED). Other events (NFP, CPI) are not named in the sources: `P:news_events` may add them only as a tested variant.
 - Confidence: medium (one example).
 
@@ -779,6 +811,8 @@ The two sources describe two different, partly overlapping systems. v0.1 impleme
 | Risk | Over-leverage audit; 1–2 trades/week | Fixed risk, daily loss limit, FOMC off, flat on Friday, ~5 trades/month | Sham risk rules apply to both modes |
 | Routine | Saturday review + Sunday prep (CRTology "SS") | Start-of-week analysis + daily pre-session / active / passive | Both |
 
+v0.2 note: the notebook (section 6.3) mostly sides with Romeo on structure (50% on the full candle, TP1 50% / TP2 opposite end, candle 3 for most, close back inside preferred) and with Sham on timing (key times, purge hours, D→4H→15m). It changes the weekly open to Sunday 17:00 and reverses the G-23 timing proxy.
+
 ---
 
 ## 5. Conflicts and decisions
@@ -790,62 +824,74 @@ Principle for v0.1 defaults: **Romeo decides CRT structure; Sham adds timing, OB
 - Reading: (a), (b) and (c) answer different questions (where to execute model #1, where to watch PO3, which TF a key level drives). (c) is newest but it maps key levels, not execution.
 - v0.1 default: execution pairs = (a); key-level TF = (c) (CRT-R22); Sham mode = (e).
 - Decide by: **backtest** (`P:tf_pairs`, test (a) vs (b) vs one step lower).
+- v0.2 (books/romeo-book p.205 [S]): the notebook's CRT → key-level table is option (c) exactly: D→W, W→M, 4H→D, 15m→1h (plus a second level one more step up). It has no table like (a) or (b). Style tables p.87, 91 [S]; D→4H→15m plan p.253, 264 [S] = option (e). Decision: (c) for key levels is now **high** confidence and gains `15m: 1H` and `kl_tf_secondary`; execution pairs stay (a) because the notebook does not address execution pairs and Romeo videos rank higher.
 
 **C-02. Weekly candle open and close.**
 - Options: open Sunday 17:00 NY (romeo/02 17:34; romeo/06 18:51 weekly separators at Sunday; romeo/10 10:54 "weekly open on Sunday") vs Monday 00:00 NY (romeo/02 17:49 "true week open of course is Monday"; romeo/03 24:03; romeo/09 14:38 "they open on Monday, not Sunday evening"). Close Friday 17:00 (romeo/03 24:19) vs Friday 16:00 (romeo/17 17:34, CRTology: "when the action dies out").
 - v0.1 default: weekly **range** (high/low used for CRT levels and pools) = all bars from Sunday 17:00 to Friday 17:00 NY (that is what FX weekly data contains); weekly **open price** (for "sell above the open", CRT-R44, and time theory) = Monday 00:00 NY; weekly close for bias = last bar before Friday 17:00. Flag Friday 16:00 as an alternative close.
 - Decide by: **both**. Backtest `P:week_open = sun_1700 | mon_0000` and `P:week_close = fri_1700 | fri_1600`; the user should confirm with Romeo's book which one he uses for the weekly CRT range.
+- v0.2 (books/romeo-book p.54 [R], p.214 [Room]): weekly open = **Sunday 17:00** ("buy below Sunday's open" Mon–Wed, exit by Thursday). No Friday close given. Romeo's videos are split, so the notebook breaks the tie. **New default: `week_open = sun_1700`** (open price and range both from Sunday 17:00). SUPERSEDED (v0.1): `week_open = mon_0000`, kept as the alternative. The Monday-first day sequence (Monday = C1 of the weekly template) is unchanged (`week_sequence_start = mon_0000`). Close stays Friday 17:00, Friday 16:00 the alternative.
 
 **C-03. Daily candle open: 00:00 NY vs a 17:00 NY broker day.**
 - Options: Romeo's daily resets at midnight NY (romeo/02 9:57; romeo/12 10:07). Sham's 4H grid (01/05/09/13/17/21) is the grid of a broker day that opens 17:00 NY, which suggests his D1 candles may be 17:00–17:00 (not stated by Sham).
 - v0.1 default: Daily = 00:00 NY (Romeo, structure source); 4H = 01/05/09/... grid (Sham, timing source). Note that a 4H candle (21:00–01:00) then spans the daily boundary.
 - Decide by: **backtest** (`P:daily_open = 0000 | 1700`, `P:h4_grid = 01 | 00`) and **user** (confirm Sham's chart settings).
+- v0.2: daily open 00:00 NY (books/romeo-book p.56 [R], p.215 [Room]) and 4H grid 01/05/09/13/17/21 (p.14, 53 [R], p.211 [Room]) both confirmed. A 17:00 broker day is not covered. Defaults unchanged; confidence up. Note: the Phase 1 broker clock (GMT+2/+3) already produces this 4H grid (docs/STATUS.md).
 
 **C-04. Close back inside required on the 4H, or not.**
 - Options: Romeo: a turtle soup always means wick beyond and close back inside, on every TF (romeo/02, romeo/07 fractal). Sham: the 4H framing CRT does not need to close back inside; the 15m OB confirms it (sham/08 20:19, 34:09; sham/11). Both require it for D/W bias CRTs.
 - v0.1 default: required in Romeo mode, not in Sham mode (CRT-R29).
 - Decide by: **backtest** (`P:require_close_inside.4H`).
+- v0.2 (books/romeo-book p.249 [S], p.10 [R]): close back inside is **preferred, not required** (it gives higher odds; a close outside means lower odds and caution). Romeo handwriting: a close beyond = true break, wick only = turtle soup. Decision: Romeo mode keeps the hard requirement (Romeo videos rank higher). Wherever the requirement is off (Sham-mode 4H, hybrid variants, and the new test variant `require_close_inside.4H = false` in Romeo mode) the close back inside becomes a **score factor** (`P:close_inside_score = true`, +1 in CRT-R46) instead of being ignored.
 
 **C-05. Targets: 50% / opposite extreme vs R multiple vs other forms.**
 - Options: Romeo: TP1 = CRT 50% (partial "always"), TP2 = opposite extreme of C1 (romeo/02, 05, 10, 11). Within Romeo: "highs/lows one by one" (romeo/03); DOL old low with partial at the initial target (romeo/04); previous day high when the TS is weak (romeo/12); body of the high that started the leg, then 50%, then CRT extreme (romeo/18, CRTology); the last high before the dump (romeo/17, CRTology). Sham: fixed 3R (sham/01, 02, 05, 08), "1 to 3R" (sham/06), 2R on Friday (sham/04).
 - v0.1 default: Romeo mode = 50% partial (`tp1_fraction = 0.5`) + opposite C1 extreme; Sham mode = 3R (2R Friday). CRTology targets are added as an option, not the default, because they are tied to the OTE/Lens entries.
 - Decide by: **backtest** (`P:target_mode`, `P:r_target`, `P:tp1_fraction`).
+- v0.2 (books/romeo-book p.9, 19, 21, 36 [R], p.152, 249 [S]): TP1 = 50% of the range with a partial **always** taken, TP2 = opposite end. No R-multiple target in the model itself (3R is only the risk model's average, p.243 [S]). Romeo-mode default confirmed; `tp1_fraction = 0.5` is now sourced, no longer PROPOSED. New variant `target_mode = opposing_kl` (exit/partial at the first opposing key level, p.162 [S]).
 
 **C-06. OTE zone.**
 - Options: Romeo (CRTology) 0.50–0.79, wick fib, body fib as refinement, shallow half preferred, no fixed fib (romeo/18). ICT standard 0.62–0.79 with 0.705. Romeo ep.7: the retrace need not reach 50% in a strong trend (romeo/10 19:11–21:44), which is shallower than 0.50.
 - v0.1 default: 0.50–0.79 on wicks (newest Romeo).
 - Decide by: **backtest** (`P:ote_zone = [0.5,0.79] | [0.62,0.79] | [0.382,0.79]`, `P:ote_fib_basis`).
+- v0.2: **not answered** by the notebook (no fib numbers; one unreadable handwritten "68.1", books/romeo-book p.215–216 [Room]). Default unchanged.
 
 **C-07. Model #1 trigger: close beyond the model candle's body or its wick.**
 - Options: "entry is the high of model number one" (romeo/03 20:20) implies the wick high; "ignore the wicks, look at the bodies" (romeo/02 38:15). The transcript around romeo/02 37:52 reads "you close above the wick, it doesn't count; when you close above this one specific candle ... from the high to the wick", which most likely means *a wick poking above does not count; a body close above the candle does*. So the "bodies" remark is probably about the trigger candle closing (body), not about the model candle's body top.
 - v0.1 default: trigger = a **close** above the model candle's **wick high** (`model1_trigger_ref = wick`); entry at that close.
 - Decide by: **backtest** (`wick | body`). Low risk either way: for a down-close model candle the body top is its open.
+- v0.2: the UTS slide says "close beyond the model candle, enter at that candle's high/low" but does not say wick or body (books/romeo-book p.27–28 [R]). **Not answered**; default unchanged.
 
 **C-08. Model #1 and true MSS: one sequence or two separate confirmations; which entry belongs to which candle.**
 - Options: romeo/06: TS → MSS → model #1 → breaker → OTE → KoD, one sequence (and the MSS is "marked by the TS and model #1"). romeo/09: model #1 first (initial move), then true MSS (further expansion), two ordered confirmations. romeo/12: every entry is model #1 or true MSS. romeo/10: "candle 1 contains a model #1, candle 3 contains an OTE".
 - v0.1 default: either model #1 or true MSS can open a trade (romeo/12, the latest of these); for SMT-based setups require model #1 first and allow adding on the MSS (CRT-R42).
 - Decide by: **backtest** (`P:romeo_entry_set`, `P:smt_confirm`).
+- v0.2: not covered (Model #1 sits inside PO3, books/romeo-book p.28 [R]; no order with MSS).
 
 **C-09. Which candle to trade; candle count.**
 - Options: Romeo: C3 only for most traders, C2 "with extreme precaution" (romeo/06, 10); romeo/02 lists a C2 entry as the most advanced. Two-candle CRT exists (romeo/10 23:06). Sham: candle count does not matter (sham/05 28:33).
 - v0.1 default: C3 only in Romeo mode (`allow_c2_entry = false`).
+- v0.2: confirmed: candle 3 for most ("confirmational CRT"), candles 2/3 before confirmation are "advanced" (books/romeo-book p.200, 262–263 [S]). CRT types: 3-candle CRT (best) and "inside CRT" (p.248 [S]).
 - Decide by: **user** (risk appetite) with a **backtest** variant.
 
 **C-10. Tradable HTF set.**
 - Options: M/W/D (romeo/05); 4H/D/W with M+ for advanced (romeo/07); M/W/D/4H, 1H for hyper scalpers (romeo/10); M/W/D/4H (romeo/02).
 - v0.1 default: `[4H, D, W]`.
+- v0.2: M/W/D/4H by style; intraday uses D/4H for the CRT (books/romeo-book p.89, 253 [S]). Default unchanged.
 - Decide by: **backtest** (one run per HTF) and **user** (holding time preference).
 
 **C-11. Kiss of death: two meanings, and where it forms.**
 - Options: Romeo KoD-R = the last turtle soup before a target (romeo/04, 05, 06, 10) or before a key level (romeo/08); prefers it in "the lower 25% of the range" (romeo/05 19:16, ambiguous for a bearish setup) and says it can be the OTE (romeo/05, 06, 10). Sham KOD-S = a sequence near the DOL where the retracement ends in discount and the dealing range is not rebalanced (sham/01, sham/06).
 - v0.1 default: keep both as separate concepts (DEF-13). KoD-R is used only as an optional re-entry and as the stop anchor for CRT-R58. KOD-S is used only as the exception in CRT-R16. "Lower 25%" is logged (`kod_pos_pct`), not filtered.
 - Decide by: **backtest** (log, then decide).
+- v0.2: KoD = last turtle soup before the opposing DOL, used to enter candle 3 (books/romeo-book p.250–252 [S]). "Lower 25%" not covered. Default unchanged.
 
 **C-12. OB entry price: OB "open" vs OB high/low.**
 - Options: sham/01 enters a bearish OB "at the open"; sham/02, sham/06, sham/11 enter at the OB high (long) / low (short).
 - Reading: for an up-close bearish OB candle, the body low is its open; so both mean "the OB edge nearest to price" when the OB extent is the body (DEF-15).
 - v0.1 default: near edge of the OB extent.
 - Decide by: **backtest** (`P:ob_entry_edge = near_edge | open | mid`).
+- v0.2: OB entry on the return to the OB; the edge is not covered (books/romeo-book p.250 [S]). Default unchanged.
 
 **C-13. Daily bias inputs differ within Sham, and from Romeo.**
 - Options: sham/03: structure + dealing range + DOLs + monthly and weekly OHLC + SMT + timing. sham/06: weekly OHLC only (no monthly). sham/11: structure + candle close. Romeo: close/wick rule, weekly first (romeo/17), paired with a key level and market profile (romeo/16).
@@ -856,11 +902,13 @@ Principle for v0.1 defaults: **Romeo decides CRT structure; Sham adds timing, OB
 - Options: sham/03, sham/08: price must first rebalance the range (EQ/premium). sham/01, sham/06: KOD-S exception near the DOL. sham/08: at all-time highs with no range, a sweep of a nearby low is enough.
 - v0.1 default: rebalance required, with both exceptions (CRT-R16).
 - Decide by: **backtest** (`P:rebalance_required`, `P:kod_s_dist`).
+- v0.2 (books/romeo-book p.98–101 [S]): a bullish draw is traded only from discount and a bearish draw only from premium (premium KL + expansion = retracement, discount KL + expansion = reversal); retracements and reversals are traded only after a LTF confirmation (CSD). Supports `rebalance_required = true`. The KOD-S and ATH exceptions are not mentioned. Default unchanged.
 
 **C-15. Which forex macros count.**
 - Options: spoken list 03:00, 09:00, 11:00 (sham/04 4:34–5:06); the 06:00 "London lunch" macro is used in two traded examples (sham/04 15:15; sham/06 15:18) though it lies after the London killzone (02:00–05:00).
 - v0.1 default: macros `[03, 06, 09, 11]`; killzones as the hard filter (`key_time_strictness = killzone_or_macro`).
 - Decide by: **backtest**.
+- v0.2 (books/romeo-book p.228, 258 [S]): refined key times 03–04, **06–07**, 08:30–09:30, 10–11 and purge key hours 01, 03, **06**, 08, 09, 11. 06:00 is confirmed (resolves C-15 in favour of keeping it). New `purge_hours` list adds 01 and 08 for purges; the `macros` list is kept for OB/entry timing (CRT-R33).
 
 **C-16. A purge outside key time: invalidate or re-select.**
 - Options: sham/06: invalidates the candle range and the trade idea. sham/04: a new 4H candle (05:00) can be re-selected afterwards.
@@ -877,77 +925,85 @@ Principle for v0.1 defaults: **Romeo decides CRT structure; Sham adds timing, OB
 - Options: C3 "usually the fastest" (romeo/02 28:17, 41:03; romeo/10 3:17) vs a slow grind with consolidations to the target (romeo/04 4:28–5:18, 12:10).
 - v0.1 default: no speed filter. Log `bars_to_tp1`, `bars_to_tp2`.
 - Decide by: **backtest** (descriptive).
+- v0.2: candle 3 is "the fastest, quick and heavy" (books/romeo-book p.200, 249 [S]); no slow case is shown. Default unchanged (no filter); `bars_to_tp1/tp2` stays logged.
 
 **C-19. Romeo's scepticism of OBs/FVGs vs Sham's OB-centred model.**
 - Options: Romeo: model #1 "is not supply and demand" (romeo/02 39:06); fake order blocks / fake PD arrays (romeo/05 11:48; romeo/09 10:56); FVG is context, not cause (romeo/17 26:17). Yet he lists the OB as "entry 2" (romeo/02 39:38) and uses FVG confluence (romeo/03, romeo/05) and an FVG-fill stop (romeo/17). Sham builds everything on OBs.
 - v0.1 default: Romeo mode does not use OBs as entries; Sham mode does. Hybrid mode: Romeo structure + Sham timing + either entry.
 - Decide by: **backtest** (`P:strategy_mode`).
+- v0.2: Romeo-family pages prefer OBs that had a failed OB before them and say "trade logic, not patterns" (books/romeo-book p.25, 63 [R]); OBs are not forbidden. Model #1 is drawn as "an order block stabbing into the previous candle's high" (p.28 [R]). Default unchanged.
 
 **C-20. Stop placement.**
 - Options: model candle extreme (romeo/03); TS / KoD extreme (romeo/05, 09, 12); daily-FVG-fill low (romeo/17); beyond the OB (Sham). OTE stop not stated (romeo/18).
 - v0.1 default: by entry type (CRT-R49 to R52); OTE stop = leg origin (PROPOSED).
 - Decide by: **backtest** (`P:stop_mode`, `P:ote_stop`).
+- v0.2 (books/romeo-book p.27, 7 [R]): stop = the swing high/low that formed into the key level (consistent with the TS-extreme stop); weekly model: beyond the week-2 / Tuesday / London high or low. Added as `stop_mode = weekly_model_extreme` for `weekly_model = wednesday`. OTE stop still not covered. Defaults unchanged.
 
 **C-21. Fixed 3R vs "1 to 3R".**
 - Options: 3R (sham/01, 02, 05, 08) vs 1–3R (sham/06 11:32, 16:52); 2R Friday (sham/04).
 - v0.1 default: 3R; 2R Friday.
 - Decide by: **backtest** (`P:r_target = 1 | 2 | 3`).
+- v0.2: the notebook's risk model uses an average of 3R (books/romeo-book p.243 [S]); R:R break-even table p.48 [R]. Default unchanged.
 
 **C-22. Counter-HTF trades.**
 - Options: Romeo forbids LTF CRTs against the HTF CRT (romeo/11 failure case 3) and against a pending DOL (romeo/04). Sham sets bias per day and allows days against the HTF structure while a dealing range rebalances (sham/03, sham/08 5:46–6:16), and a counter-trend trade to EQ with a strong SMT (sham/06 13:07).
 - Reading: they agree if Sham's "rebalance" leg is itself the active HTF draw (the short-term DOL). They disagree when HTF structure and short-term DOL point opposite ways.
 - v0.1 default: Romeo rule in Romeo mode; Sham rule in Sham mode; `allow_counter_htf = false` in hybrid.
 - Decide by: **backtest**.
+- v0.2 (books/romeo-book p.38, 67–68 [R], p.101 [S]): follow the HTF order flow, do not trade counter-expansion (Q&A example of a trader run over shorting an old high against a bullish HTF flow). Supports `allow_counter_htf = false`; Sham-mode counter trades still need CSD confirmation. Default unchanged.
 
 **C-23. SMT confirmation: model #1 *or* MSS, or both in order.**
 - Options: romeo/11: model #1 or true MSS. romeo/09: two confirmations, model #1 then MSS. Sham: SMT can stand in for a full sweep at a key time (sham/04 10:44) and an SMT purge counts as the OB liquidity function (sham/02 8:42).
 - v0.1 default: see C-08 (first entry on model #1 or MSS; add on MSS).
+- v0.2: SMT is a confluence at key levels/times, in the HTF draw direction; no order with model #1 or MSS (books/romeo-book p.174, 178 [S]). Default unchanged.
 - Decide by: **backtest**.
 
 **C-24. Is SMT required?**
 - Options: Romeo: SMT is the only thing that stops a target (romeo/04) and a confluence on most shown trades (romeo/08, 12, 17), but no rule says every trade needs one. Sham: probability factor and bias input, not required.
 - v0.1 default: not required for entry; used for invalidation (CRT-R57) and scoring (CRT-R46). Requires a second symbol's data (`P:smt_pairs`).
 - Decide by: **backtest** (`P:require_smt`).
+- v0.2: **SMT is not required**; it is a confluence only and "never the main idea" (books/romeo-book p.178 [S]). Confirms `require_smt = false`; SMT stays a +1 score factor and the invalidation trigger of CRT-R57.
 
 **C-25. Bias CRT target: opposite extreme vs dealing-range EQ.**
 - Options: sham/05 26:27: keep bias toward the opposite end (CRT low). sham/08 25:53, 29:22: opposite side or dealing-range EQ/premium.
 - v0.1 default: opposite extreme.
 - Decide by: **backtest** (`P:bias_crt_target`).
+- v0.2: not covered by the notebook.
 
 ---
 
 ## 6. Discretionary gaps
 
-Things the sources leave to judgement. Each has a **PROPOSED (not from source)** measurable proxy, so the backtest can run now and the proxy can be replaced when a better source appears.
+Things the sources leave to judgement. Each has a **PROPOSED (not from source)** measurable proxy, so the backtest can run now and the proxy can be replaced when a better source appears. The last column (v0.2) records what the notebook adds (`books/romeo-book`, section 6.3).
 
-| ID | Gap | Where | PROPOSED proxy (not from source) | Params |
-|---|---|---|---|---|
-| G-01 | **How to choose the correct key level.** Romeo says this was not taught publicly and is "very important". | romeo/13 9:16–9:48; romeo/10; romeo/08 | Score every candidate from CRT-R19 within `kl_max_dist_atr × ATR(htf)` of C1: +1 unswept, +1 on a TF ≥ CRT-R22's TF, +1 confluence with another candidate within 0.1 ATR, +1 correct premium/discount half, +1 "most visible" (largest prominence, G-17). Use the highest-scoring level; log all. | `kl_types`, `kl_max_dist_atr: 1.5`, `kl_select: score|nearest` |
-| G-02 | **Old high / old low, swing strength.** | romeo/01; romeo/03 | Fractal swing with N bars each side on the TF in question, unswept. | `swing_n: 2` (test 2, 3, 5) |
-| G-03 | **Romeo's "six possibilities" of weekly candle anatomy.** Only examples named (pin bar, full bullish/bearish, down-then-up, up-then-down). | romeo/16 7:25 | Classifier on weekly OHLC + time of H/L: `bull_full` (body ≥ 60%, close > open), `bear_full`, `bull_pin` (lower wick ≥ 60%), `bear_pin` (upper wick ≥ 60%), `down_then_up` (low before high, else neither full nor pin), `up_then_down`. Replace when the list is published. | `shape_body_full: 0.6`, `shape_wick_pin: 0.6` |
-| G-04 | **Market profile** (Romeo: sequence of swept vs broken highs/lows; Sham: expansion / retracement / consolidation / manipulation). | romeo/12 8:46; romeo/16 23:33; romeo/14 12:03; sham/01 2:09 | Romeo: on the LTF swing list, `bear_profile` if the last k swing highs were swept-and-closed-back (TS) and the last k swing lows were broken by closes; mirror for bull; else `none`. Sham: `expansion` if the last D candle closed beyond the prior range in the bias direction; `retracement` if it closed against; `consolidation` if inside; `manipulation` if CRT-R08 bias flips after a strong counter D1 + H4 CSD (sham/06 19:00). | `profile_k: 2` |
-| G-05 | **Closing-hour logic of the 4H candle.** Sham: "one of the most important" timing elements, not explained. | sham/08 19:31; sham/06 10:43 | Log for every purge: minute offset inside its 4H candle, and whether the purge happened in the first or last hour of that candle. Test as a filter "purge in last hour" vs "first hour". | `closing_hour_filter: none|first|last` |
-| G-06 | **Weekly / daily profiles** ("is the week in expansion or retracement; has the high/low of the week formed?"). | sham/08 11:05–12:23, 18:12; sham/04 19:34 | Weekly: `how_formed` = the current week's high is ≥ X ATR above the current price and was set Mon–Wed. Daily: "high of day first" if the day's high is before 05:00 NY. Build weekday-of-high/low statistics from history and use them as priors. | `profile_lookback_weeks: 104` |
-| G-07 | **"Which candle makes the most sense" as the 4H CRT.** | sham/05; sham/06 9:25; sham/11 12:45 | First closed 4H candle with open in {21:00, 01:00, 05:00} that closes inside the key-level zone, in the correct half, after the range is rebalanced (CRT-R28). | `framing_candle_opens` |
-| G-08 | **"Thick" candle.** | romeo/02, 03, 09, 10 | DEF-09: body/range ≥ 0.6 and range ≥ 1.0 × ATR(14). Variant: body ≥ 1.5 × median body of last 20. | `thick_body_ratio`, `thick_atr_mult` |
-| G-09 | **Dealing range = "most recent expansion swing".** | sham/01 7:00; sham/03 14:19; sham/08 23:31 | Last pair of opposite fractal swings whose leg length ≥ `dr_min_atr × ATR(tf)` and which contains at least one FVG ("displacement"). Re-anchor when a new swing beyond it is confirmed. | `dr_min_atr: 2.0` |
-| G-10 | **"Unfilled liquidity" in a dealing range.** | sham/03 14:19; sham/01 | At least one FVG or OB inside the swing not touched by any later wick. | `fvg_fill` |
-| G-11 | **Killzone vs macro strictness; macro length.** | sham/04 | Killzone = hard filter; macro = bonus; macro = `[HH:00, HH:59]`. Variant: ICT-style `[HH-10min, HH+10min]`. | `macro_window`, `key_time_strictness` |
-| G-12 | **Which candles form a multi-candle OB.** | sham/02 36:41 | Maximal run of consecutive opposite-colour candles ending at the bar before the engulf, that includes the purge bar. | `ob_max_candles: 4` |
-| G-13 | **"Meaningful HTF high/low" for OB purges.** | sham/02 3:01 | Fractal swing on a TF ≥ one step above the OB TF, or a prior D/W candle high/low, or a CRT high/low. | `ob_liq_tf_steps: 1` |
-| G-14 | **End of OTE leg one; "wave" of closes; "sharp" retrace.** | romeo/18 | Leg end = extreme after activation until the first close that retraces ≥ `leg_end_atr × ATR`. Log the number of closes through the level. | `leg_end_atr: 0.5` |
-| G-15 | **Identifying KoD-R in real time.** Only clear afterwards. | romeo/04, 05, 10 | Inside an active CRT after TP1: any LTF sweep of the latest swing high (bear) that closes back below, with no new C2 high. Use as stop/invalidation anchor and optional re-entry only. | `kod_r_requires_tp1: false` (changed in 6.2) |
-| G-16 | **"Decisive" / "multiple" closes beyond the key high.** | romeo/04 16:04 | ≥ 2 LTF closes beyond, each with body/range ≥ 0.5. | `decisive_closes: 2` |
-| G-17 | **"Most visible" old low** (pairing for the Lens). | romeo/17 17:50 | Fractal swing with the largest prominence (distance to the next swing beyond it) within the last 12 candles of that TF. | `visible_lookback: 12` |
-| G-18 | **Consolidation / range on the LTF** (Monday chop; range then TS). | romeo/16, romeo/17 | ≥ 6 LTF bars whose total high-low ≤ 1.5 × ATR(ltf). | `range_min_bars: 6`, `range_max_atr: 1.5` |
-| G-19 | **Rejection block** ("a turtle soup of the body"). | romeo/17 20:41 | Candle group whose wicks swept a prior body extreme while bodies held; zone = wick beyond bodies. Logged only. | – |
-| G-20 | **"Overwhelmingly one-sided" confluence.** | romeo/12 9:30 | All of: HTF bias, market profile (G-04), key level present, entry model; SMT optional. | `min_confluence` |
-| G-21 | **"Has the weekly/monthly candle already delivered?"** | sham/04 20:06 | CRT-R17 proxy (target PDA hit, or range ≥ 5 × ADR). | `delivered_adr_mult` |
-| G-22 | **"Correct time" / "where time meets price" (Romeo).** | romeo/03 16:16; romeo/06 12:28; romeo/08 13:51 | Weekday filter (CRT-R35) + optional Sham killzones. Log hour-of-day of every Romeo sweep and trigger. | `romeo_use_killzones` |
-| G-23 | **Manipulation at the end of the previous candle.** | romeo/09 7:31 | Sweep in the last 20% of the previous HTF candle's duration (CRT-R36). | `late_frac: 0.8` |
-| G-24 | **"Not very convincing" turtle soup** (smaller target). | romeo/12 16:56 | Sweep depth < 0.25 × ATR(htf) → target = previous day high/low only. | `weak_ts_atr: 0.25` |
-| G-25 | **"Clean" weekly range; fake vs real PD arrays; strength classes (very bullish … very bearish).** | romeo/02; romeo/05 11:48; romeo/17 4:04 | Not modelled in v0.1. Log weekly range / ATR(W). | – |
-| G-26 | **Ranging day / when to stay neutral.** | sham/03 31:22; sham/11 | CRT-R13 proxy: previous day range < 0.5 × ADR(20), or a bias-table conflict. | `ranging_adr_frac` |
+| ID | Gap | Where | PROPOSED proxy (not from source) | Params | v0.2 (notebook) |
+|---|---|---|---|---|---|
+| G-01 | **How to choose the correct key level.** Romeo says this was not taught publicly and is "very important". | romeo/13 9:16–9:48; romeo/10; romeo/08 | Score every candidate from CRT-R19 within `kl_max_dist_atr × ATR(htf)` of C1: +1 unswept, +1 on a TF ≥ CRT-R22's TF, +1 confluence with another candidate within 0.1 ATR, +1 correct premium/discount half, +1 "most visible" (largest prominence, G-17). Use the highest-scoring level; log all. | `kl_types`, `kl_max_dist_atr: 1.5`, `kl_select: score|nearest` | **v0.2:** types confirmed (HTF highs/lows, FVG, breaker, OB, RB, "all HTF PD arrays"; books/romeo-book p.83, 205 [S]); important highs/lows are the ones that **broke structure** (p.4–5, 11 [R]); level TF one step above the CRT TF (p.205 [S]). Added: candidate type `bos_origin_hl` and `kl_score_bos_bonus: 1` in the score. Ranking among candidates: **not covered** (only the order of importance highs, lows, FVGs, opens, closes, p.60 [R]). |
+| G-02 | **Old high / old low, swing strength.** | romeo/01; romeo/03 | Fractal swing with N bars each side on the TF in question, unswept. | `swing_n: 2` (test 2, 3, 5) | **v0.2:** short- and intermediate-term swings are used for invalidation, no bar count (books/romeo-book p.137 [S]). Unchanged. |
+| G-03 | **Romeo's "six possibilities" of weekly candle anatomy.** Only examples named (pin bar, full bullish/bearish, down-then-up, up-then-down). | romeo/16 7:25 | Classifier on weekly OHLC + time of H/L: `bull_full` (body ≥ 60%, close > open), `bear_full`, `bull_pin` (lower wick ≥ 60%), `bear_pin` (upper wick ≥ 60%), `down_then_up` (low before high, else neither full nor pin), `up_then_down`. Replace when the list is published. | `shape_body_full: 0.6`, `shape_wick_pin: 0.6` | **v0.2 (partial):** not "six possibilities". Three weekly profiles, each drawn bull and bear: classic expansion week (Mon range, Tue manipulation, Wed expansion, Thu range/reversal, Fri reversal), midweek reversal, consolidation reversal (books/romeo-book p.116–123 [S]). 3 × 2 = six pictures is only a guess. Added classifier variant `week_shape_mode: sham_profiles`; default proxy unchanged. |
+| G-04 | **Market profile** (Romeo: sequence of swept vs broken highs/lows; Sham: expansion / retracement / consolidation / manipulation). | romeo/12 8:46; romeo/16 23:33; romeo/14 12:03; sham/01 2:09 | Romeo: on the LTF swing list, `bear_profile` if the last k swing highs were swept-and-closed-back (TS) and the last k swing lows were broken by closes; mirror for bull; else `none`. Sham: `expansion` if the last D candle closed beyond the prior range in the bias direction; `retracement` if it closed against; `consolidation` if inside; `manipulation` if CRT-R08 bias flips after a strong counter D1 + H4 CSD (sham/06 19:00). | `profile_k: 2` | **v0.2:** five phases range / manipulation / expansion / retracement / reversal (books/romeo-book p.254 [S]) and the outcome table (p.87 [S]): expansion + no KL → retracement/range (avoid); expansion + KL → reversal (trade); range + no KL → manipulation (avoid); range + KL → expansion (trade); reversal + no KL → retracement (avoid); reversal + KL → range (avoid); retracement + KL → expansion (trade); manipulation → expansion (trade). Trade only expansion/reversal outcomes. Replaces the Sham proxy as default `market_profile_mode: five_phase` (phase detection itself is still our proxy on D/4H closes: expansion = close beyond prior range in a direction; range = inside; manipulation = sweep and close back; retracement = close against the last expansion; reversal = structure flip, CRT-R15). |
+| G-05 | **Closing-hour logic of the 4H candle.** Sham: "one of the most important" timing elements, not explained. | sham/08 19:31; sham/06 10:43 | Log for every purge: minute offset inside its 4H candle, and whether the purge happened in the first or last hour of that candle. Test as a filter "purge in last hour" vs "first hour". | `closing_hour_filter: none|first|last` | **v0.2: not covered** by the notebook. Still open. |
+| G-06 | **Weekly / daily profiles** ("is the week in expansion or retracement; has the high/low of the week formed?"). | sham/08 11:05–12:23, 18:12; sham/04 19:34 | Weekly: `how_formed` = the current week's high is ≥ X ATR above the current price and was set Mon–Wed. Daily: "high of day first" if the day's high is before 05:00 NY. Build weekday-of-high/low statistics from history and use them as priors. | `profile_lookback_weeks: 104` | **v0.2:** low of week Mon–Wed, opposite end Thu/Fri (p.53 [R]); Wednesday almost never both (p.212 [Room]); month: week 1 range, 2 manipulation/expansion, 3 distribution, 4 continuation/reversal/reset (p.228 [S]); 01:00 and 09:00 are the best 4H blocks (p.14 [R], p.211 [Room]). Tuesday 70% and 81% claims: **backtest only** (p.53–54, 212). Logged as `week_of_month` and weekday stats. |
+| G-07 | **"Which candle makes the most sense" as the 4H CRT.** | sham/05; sham/06 9:25; sham/11 12:45 | First closed 4H candle with open in {21:00, 01:00, 05:00} that closes inside the key-level zone, in the correct half, after the range is rebalanced (CRT-R28). | `framing_candle_opens` | **v0.2:** Room 5am model (books/romeo-book p.201, 211 [Room]): 05:00 4H CRT, 15m CRT at its high/low, purge in the 09:00 hour **accepted until 10:30**, entry on the **2nd 15m candle close** or a **15m/5m OB**. Added as `framing_model: room_5am`; default candidate list unchanged. |
+| G-08 | **"Thick" candle.** | romeo/02, 03, 09, 10 | DEF-09: body/range ≥ 0.6 and range ≥ 1.0 × ATR(14). Variant: body ≥ 1.5 × median body of last 20. | `thick_body_ratio`, `thick_atr_mult` | **v0.2:** "thick" not defined numerically (p.27 [R]). Unchanged. |
+| G-09 | **Dealing range = "most recent expansion swing".** | sham/01 7:00; sham/03 14:19; sham/08 23:31 | Last pair of opposite fractal swings whose leg length ≥ `dr_min_atr × ATR(tf)` and which contains at least one FVG ("displacement"). Re-anchor when a new swing beyond it is confirmed. | `dr_min_atr: 2.0` | **v0.2:** dealing range = the expansion swing after price took out a swing low **and** a swing high; no FVG condition stated (books/romeo-book p.96 [S]). Added `dr_require_sweep_both: true` (fills a hole). The FVG requirement stays the default (ICT ranks higher) with `dr_require_fvg: false` as the variant. |
+| G-10 | **"Unfilled liquidity" in a dealing range.** | sham/03 14:19; sham/01 | At least one FVG or OB inside the swing not touched by any later wick. | `fvg_fill` | **v0.2:** not covered (OBs "fill" FVG liquidity, p.107 [S]). Unchanged. |
+| G-11 | **Killzone vs macro strictness; macro length.** | sham/04 | Killzone = hard filter; macro = bonus; macro = `[HH:00, HH:59]`. Variant: ICT-style `[HH-10min, HH+10min]`. | `macro_window`, `key_time_strictness` | **v0.2:** London lunch 05–07; refined key times **03–04, 06–07, 08:30–09:30, 10–11**; purge key hours **01, 03, 06, 08, 09, 11** (books/romeo-book p.228, 258 [S]); 03–05 and 09–11 high-probability (p.28 [R]). Added `refined_key_times` and `purge_hours`. Macro length: not covered. |
+| G-12 | **Which candles form a multi-candle OB.** | sham/02 36:41 | Maximal run of consecutive opposite-colour candles ending at the bar before the engulf, that includes the purge bar. | `ob_max_candles: 4` | **v0.2:** OB = one candle or a run; zone rule adds "wick clearly larger than body → use the wick" (p.107–111 [S]). Max run length: not covered. |
+| G-13 | **"Meaningful HTF high/low" for OB purges.** | sham/02 3:01 | Fractal swing on a TF ≥ one step above the OB TF, or a prior D/W candle high/low, or a CRT high/low. | `ob_liq_tf_steps: 1` | **v0.2:** not covered. |
+| G-14 | **End of OTE leg one; "wave" of closes; "sharp" retrace.** | romeo/18 | Leg end = extreme after activation until the first close that retraces ≥ `leg_end_atr × ATR`. Log the number of closes through the level. | `leg_end_atr: 0.5` | **v0.2:** not covered as a rule; OTE = retracement after the first expansion, second leg ≥ first is "very likely" (p.5 [R], p.215–216 [Room], guess). Unchanged. |
+| G-15 | **Identifying KoD-R in real time.** Only clear afterwards. | romeo/04, 05, 10 | Inside an active CRT after TP1: any LTF sweep of the latest swing high (bear) that closes back below, with no new C2 high. Use as stop/invalidation anchor and optional re-entry only. | `kod_r_requires_tp1: false` (changed in 6.2) | **v0.2:** KoD = last TS before the opposing DOL/extreme, used to trade candle 3 (p.250–252 [S]); no real-time rule. Unchanged. |
+| G-16 | **"Decisive" / "multiple" closes beyond the key high.** | romeo/04 16:04 | ≥ 2 LTF closes beyond, each with body/range ≥ 0.5. | `decisive_closes: 2` | **v0.2:** a market shift needs **one** close beyond the important high/low, preferably with displacement (p.45–46 [R]). Added `decisive_closes: 1` as a variant; default 2 unchanged (that rule is about invalidation, not the shift). |
+| G-17 | **"Most visible" old low** (pairing for the Lens). | romeo/17 17:50 | Fractal swing with the largest prominence (distance to the next swing beyond it) within the last 12 candles of that TF. | `visible_lookback: 12` | **v0.2:** not covered. |
+| G-18 | **Consolidation / range on the LTF** (Monday chop; range then TS). | romeo/16, romeo/17 | ≥ 6 LTF bars whose total high-low ≤ 1.5 × ATR(ltf). | `range_min_bars: 6`, `range_max_atr: 1.5` | **v0.2:** range rules only (extremes, 50%, "any first breakout of a range is fake", p.36 [R]). Unchanged. |
+| G-19 | **Rejection block** ("a turtle soup of the body"). | romeo/17 20:41 | Candle group whose wicks swept a prior body extreme while bodies held; zone = wick beyond bodies. Logged only. | – | **v0.2:** named as a key level, "works with SMT", no definition (p.18–19 [R], p.255 [S]). Unchanged. |
+| G-20 | **"Overwhelmingly one-sided" confluence.** | romeo/12 9:30 | All of: HTF bias, market profile (G-04), key level present, entry model; SMT optional. | `min_confluence` | **v0.2:** a CRT needs **at least three confirmations**: timed CRT, timed purge, HTF key level; extras: inside bars, LTF CRT inside the HTF CRT (books/romeo-book p.201, 203 [Room]). New default `min_confirmations: 3` over `confirmation_types` (fills the hole; replaces the v0.1 "all of" proxy, SUPERSEDED). |
+| G-21 | **"Has the weekly/monthly candle already delivered?"** | sham/04 20:06 | CRT-R17 proxy (target PDA hit, or range ≥ 5 × ADR). | `delivered_adr_mult` | **v0.2:** not covered. |
+| G-22 | **"Correct time" / "where time meets price" (Romeo).** | romeo/03 16:16; romeo/06 12:28; romeo/08 13:51 | Weekday filter (CRT-R35) + optional Sham killzones. Log hour-of-day of every Romeo sweep and trigger. | `romeo_use_killzones` | **v0.2:** CRT formed at key times and purged at key times; time before price; weekday filter via the weekly profiles (p.258–259 [S], p.4, 15 [R]). Fed into G-20 (`timed_crt`, `timed_purge` use G-11 times in every mode). |
+| G-23 | **Manipulation at the end of the previous candle.** | romeo/09 7:31 | Sweep in the last 20% of the previous HTF candle's duration (CRT-R36). | `late_frac: 0.8` | **v0.2: proxy REVERSED.** High-probability turtle soup forms at the **open of a new candle**, not at the end of the old one (books/romeo-book p.40, 41 [R], p.208 [Room]). New default `ts_timing_mode: open_of_new`, `ts_at_open_frac: 0.2` (PROPOSED), scored +1. SUPERSEDED (v0.1): late-sweep proxy `late_frac: 0.8`, kept as variant `late_of_prev` (romeo/09). |
+| G-24 | **"Not very convincing" turtle soup** (smaller target). | romeo/12 16:56 | Sweep depth < 0.25 × ATR(htf) → target = previous day high/low only. | `weak_ts_atr: 0.25` | **v0.2:** not covered. |
+| G-25 | **"Clean" weekly range; fake vs real PD arrays; strength classes (very bullish … very bearish).** | romeo/02; romeo/05 11:48; romeo/17 4:04 | Not modelled in v0.1. Log weekly range / ATR(W). | – | **v0.2:** not covered ("clean close" not defined). |
+| G-26 | **Ranging day / when to stay neutral.** | sham/03 31:22; sham/11 | CRT-R13 proxy: previous day range < 0.5 × ADR(20), or a bias-table conflict. | `ranging_adr_frac` | **v0.2:** avoid ranging, manipulation and retracement outcomes (G-04 table, p.87 [S]); **do nothing if Monday is an expansion** (p.13 [R]); **never trade the middle of a range** (p.36 [R]); CBDR drawn **16:00–20:00** (p.148 [S], chart labels), which **conflicts** with ICT's 14:00–20:00 (6.1; ICT ranks higher, so 14:00 stays default and 16:00 is the variant); news: "use the news calendar" (p.117 [S]). Added `skip_if_monday_expansion`, `monday_expansion_adr` (PROPOSED), `mid_range_block` (PROPOSED), `cbdr_window`. |
 
 ### 6.1 ICT answers to the gaps
 
@@ -1015,14 +1071,52 @@ decision).
 **Still open after the books:** G-05 (Sham's closing-hour logic) and G-03
 (Romeo's six weekly candle shapes).
 
+### 6.3 Findings from the notebook (books/romeo-book, v0.2)
+
+A scanned handwritten notebook of 268 pages, not a typeset book and **not**
+Romeo's own published book (still unstudied). Provenance per page is in
+`books/romeo-book/01-provenance-and-page-map.md`: [R] p.1–70 and 266–267,
+[S] p.71–197 and 225–264, [Room] p.198–224. The answers are mapped in
+`00-answers.md`. Priority: notebook [R] ranks below ICT; [S] and [Room] rank
+below [R] and above the student PDF guides.
+
+| Affects | Finding | Source | v0.2 decision |
+|---|---|---|---|
+| Q7, DEF-03 | CRT range = the whole candle incl. wicks; the 50% is measured on it | p.249 [S] | Confirmed; confidence high |
+| C-01, CRT-R22 | Key-level TF table 15m→1h, 4H→D, D→W, W→M (+ one more step) = option (c) | p.205 [S] | Confirmed; add `15m: 1H` and `kl_tf_secondary` |
+| C-02 | Weekly open Sunday 17:00 ("buy below Sunday's open") | p.54 [R], p.214 [Room] | **Default changed** to `week_open: sun_1700` |
+| C-03 | Daily 00:00 NY; 4H grid 01/05/09/13/17/21 | p.14, 53, 56 [R], p.211, 215 [Room] | Confirmed |
+| C-04 | Close back inside preferred, not required | p.249 [S], p.10 [R] | Romeo mode unchanged; score factor where not required |
+| C-05 | TP1 50% always partial; TP2 opposite end | p.9, 19, 21, 36 [R], p.249 [S] | Confirmed; `tp1_fraction` now sourced |
+| G-01 | Key levels = highs/lows that broke structure, plus FVG/breaker/OB/RB | p.4–5 [R], p.205 [S] | Add `bos_origin_hl` type and score bonus |
+| G-04 | Five profiles + outcome table | p.87, 254 [S] | New default `market_profile_mode: five_phase` |
+| G-07 | 4H 05:00 CRT, purge in 09:00 hour until 10:30, entry 2nd 15m close or 15m/5m OB | p.201 [Room] | Variant `framing_model: room_5am` |
+| G-11 | Key times 03–04, 06–07, 08:30–09:30, 10–11; purge hours 1, 3, 6, 8, 9, 11 | p.228, 258 [S] | New `refined_key_times`, `purge_hours` |
+| G-20 | At least three confirmations | p.201, 203 [Room] | New default `min_confirmations: 3` |
+| G-23 | High-probability TS at the open of a new candle | p.40, 41 [R], p.208 [Room] | **Proxy reversed** (`ts_timing_mode: open_of_new`) |
+| G-26 | Avoid range/manipulation/retracement outcomes; skip if Monday is an expansion; never mid-range; CBDR 16:00–20:00 | p.13, 36 [R], p.87, 148 [S] | New filters; CBDR 16:00 as variant (ICT 14:00 stays default) |
+| 6.2 1-5-9, Wednesday model | Confirmed; 90-minute cycle 01:00/01:30/02:00 | p.14, 53–58, 213–216 | Keep |
+| Risk | 0.5% per trade, 3–4 trades a week, no daily limit | p.243, 264 [S] | **Reference only.** User decision (1% / −2% daily) stands |
+
+**Claims still backtest only:** Tuesday prints the weekly high/low 70% of the
+time; 81% of weekly highs/lows form between Sunday open and Tuesday London
+(p.53–54 [R], p.212 [Room]). "10 high-probability / 25 good setups a week"
+(p.53, 211) stays rejected.
+
+**Not answered by the notebook:** G-05 (closing-hour logic), G-03 "six
+possibilities" (only three profiles × bull/bear), the key-level ranking
+algorithm (G-01 core), the OTE zone numbers (C-06, G-14) and model #1 wick vs
+body (C-07, Q9). Also G-08, G-10, G-13, G-17, G-21, G-24, G-25, C-06, C-08,
+C-13, C-16, C-17, C-25.
+
 ---
 
 ## 7. Parameters for the backtester
 
-Every knob in one place. `default` is the v0.1 value; `alt` are values to test. Values marked `# PROPOSED` are not from any source.
+Every knob in one place. `default` is the v0.2 value (changes since v0.1 are listed in the changelog); `alt` are values to test. Values marked `# PROPOSED` are not from any source.
 
 ```yaml
-rulebook_version: "0.1"
+rulebook_version: "0.2"
 
 general:
   strategy_mode: romeo            # alt: sham, hybrid           (C-19)
@@ -1033,17 +1127,20 @@ general:
   ts_close_back_bars: 1           # PROPOSED; alt: 2, 3        (DEF-06)
 
 candles:
-  daily_open: "00:00"             # alt: "17:00"               (C-03)
-  h4_grid_first_open: "01:00"     # alt: "00:00"               (C-03)
-  week_open: mon_0000             # alt: sun_1700              (C-02)  open PRICE reference
+  daily_open: "00:00"             # alt: "17:00"               (C-03; confirmed books/romeo-book p.56)
+  h4_grid_first_open: "01:00"     # alt: "00:00"               (C-03; confirmed books/romeo-book p.14, 53, 211)
+  week_open: sun_1700             # v0.2 (was mon_0000); alt: mon_0000  (C-02; books/romeo-book p.54, 214)  open PRICE reference
   week_range_from: sun_1700       # alt: mon_0000              (C-02)  which bars count for weekly H/L
+  week_sequence_start: mon_0000   # Monday = C1 of the weekly template (CRT-R35; books/secrets-of-time)
   week_close: fri_1700            # alt: fri_1600              (C-02)
   max_inside_bars: 3              # PROPOSED                   (CRT-R26)
 
 timeframes:
   htf_allowed: [4H, D, W]         # alt: [D, W], [4H], [W, M]   (C-10)
   tf_pairs: {M: D, W: 4H, D: 1H, 4H: 15m}     # alt: {M: 4H, W: 1H, D: 15m, 4H: 5m}  (C-01)
-  kl_tf_for_htf: {W: M, D: W, 4H: D, 1H: 4H}  # (CRT-R22)
+  kl_tf_for_htf: {W: M, D: W, 4H: D, 1H: 4H, 15m: 1H}  # (CRT-R22, C-01 option c; books/romeo-book p.205) v0.2 adds 15m
+  kl_tf_secondary: {W: Y, D: M, 4H: W, 1H: D, 15m: 4H}  # v0.2: second level one more step up (books/romeo-book p.205 "+")
+  tf_pairs_alt_notebook: {W: H1, D: M15, 4H: M15, 1H: M5, 15m: M1}  # variant only (books/romeo-book p.87, 91 style tables)
   sham_stack: {bias: D, framing: 4H, entry: 15m}
 
 bias:
@@ -1058,9 +1155,16 @@ bias:
   near_target_atr: 0.5            # PROPOSED                  (CRT-R11)
   use_weekly_time_theory: true    # (CRT-R14)
   romeo_sweep_days: [Mon, Tue, Wed]   # alt: all              (CRT-R35)
+  skip_if_monday_expansion: true  # v0.2 new (G-26; books/romeo-book p.13): no weekly-template setups that week
+  monday_expansion_adr: 1.0       # PROPOSED: Monday range >= 1.0 x ADR(20) and close in outer 25% of its range
+  mid_range_block: [0.4, 0.6]     # v0.2 new, PROPOSED band (G-26; "never trade the middle", books/romeo-book p.36): no entry inside this band of the CRT / dealing range
+  market_profile_mode: five_phase # v0.2 (was sham 4-profile proxy); alt: romeo_swings, sham4  (G-04; books/romeo-book p.87, 254)
+  trade_outcomes: [expansion, reversal]   # G-04 table: avoid range, manipulation, retracement outcomes
 
 dealing_range:
   dr_min_atr: 2.0                 # PROPOSED                  (G-09)
+  dr_require_sweep_both: true     # v0.2 new (G-09; books/romeo-book p.96): swing low and high taken before the expansion swing
+  dr_require_fvg: true            # ICT-K; alt: false (books/romeo-book p.96 states no FVG condition)
   rebalance_required: true        # alt: false                (C-14)
   rebalance_level: eq             # alt: premium_fvg
   kod_s_dist: 0.25                # PROPOSED fraction of DR height  (CRT-R16)
@@ -1069,18 +1173,26 @@ dealing_range:
   fvg_fill: touch                 # PROPOSED; alt: half, full (DEF-17)
 
 key_level:
-  kl_types: [old_high, old_low, fvg, ob, rb]   # (CRT-R19; five key levels, books/crt-keylevels). Variants: + prev_period_hl, candle_open, weekly_wick_50
+  kl_types: [old_high, old_low, bos_origin_hl, fvg, ob, rb]   # v0.2 adds bos_origin_hl (G-01; books/romeo-book p.4-5). Variants: + breaker, prev_period_hl, candle_open, weekly_wick_50
+  kl_score_bos_bonus: 1           # v0.2 new: +1 in the G-01 score when the level created a BOS
   kl_select: score                # PROPOSED; alt: nearest    (G-01)
   kl_max_dist_atr: 1.5            # PROPOSED
   kl_touch_tol: 0.0               # PROPOSED, in ATR(ltf)     (CRT-R20)
   visible_lookback: 12            # PROPOSED                  (G-17)
 
 crt:
-  require_close_inside: {W: true, D: true, 4H: true}   # sham mode: {W: true, D: true, 4H: false}  (C-04)
+  require_close_inside: {W: true, D: true, 4H: true}   # sham mode: {W: true, D: true, 4H: false}; alt romeo: 4H false  (C-04)
+  close_inside_score: true        # v0.2 new: where not required, a close back inside adds +1 (C-04; books/romeo-book p.249)
+  min_confirmations: 3            # v0.2 new (G-20; books/romeo-book p.201, 203); alt: 2, 4
+  confirmation_types: [timed_crt, timed_purge, htf_key_level, inside_bars, ltf_crt_inside_htf]
+  framing_model: default          # alt: room_5am             (G-07; books/romeo-book p.201)
+  room_5am: {crt_open: "05:00", ltf: 15m, purge_window: ["09:00", "10:30"], entry: second_15m_close, entry_alt: [ob_15m, ob_5m]}
   allow_c2_entry: false           # (C-09)
   framing_candle_opens: ["21:00", "01:00", "05:00"]    # PROPOSED from Sham examples  (CRT-R28)
   allow_reselect: true            # (C-16)
-  late_frac: 0.8                  # PROPOSED                  (CRT-R36)
+  ts_timing_mode: open_of_new     # v0.2 (G-23 reversed; books/romeo-book p.40, 208); alt: late_of_prev (romeo/09)
+  ts_at_open_frac: 0.2            # PROPOSED: sweep in first 20% of the HTF candle = ts_at_open (+1 score)
+  late_frac: 0.8                  # PROPOSED; used only when ts_timing_mode = late_of_prev  (CRT-R36)
 
 timing:
   killzones:                      # sham/04
@@ -1091,13 +1203,17 @@ timing:
     ny_am: ["08:30", "11:00"]
     ny_lunch: ["12:00", "13:00"]
     ny_pm: ["13:30", "16:00"]
-  macros: ["03:00", "06:00", "09:00", "11:00"]   # alt: without 06:00   (C-15)
+  macros: ["03:00", "06:00", "09:00", "11:00"]   # 06:00 confirmed by books/romeo-book p.228 (C-15); alt: without 06:00
+  purge_hours: ["01:00", "03:00", "06:00", "08:00", "09:00", "11:00"]   # v0.2 new (G-11; books/romeo-book p.258); a purge in these hours is timed
+  refined_key_times: [["03:00", "04:00"], ["06:00", "07:00"], ["08:30", "09:30"], ["10:00", "11:00"]]   # v0.2 new (G-11; books/romeo-book p.228)
+  london_lunch: ["05:00", "07:00"]  # v0.2 (books/romeo-book p.228)
+  cbdr_window: ["14:00", "20:00"]   # ICT-K; alt: ["16:00", "20:00"] (books/romeo-book p.148)  (G-26)
   macro_window: hour              # PROPOSED; alt: pm10min    (G-11)
   key_time_strictness: killzone_or_macro   # alt: macro_only
   asia_block: ["20:00", "02:00"]  # sham mode (CRT-R34)
   asia_block_romeo: false
   romeo_use_killzones: false      # PROPOSED                  (G-22)
-  closing_hour_filter: none       # PROPOSED; alt: first, last  (G-05)
+  closing_hour_filter: none       # PROPOSED; alt: first, last  (G-05; still open, not in the notebook)
 
 entry:
   romeo_entry_set: [model1, mss]  # alt: [model1], [mss], [model1, mss, ote, kod_r]   (C-08)
@@ -1112,7 +1228,7 @@ entry:
   ote_trigger: touch              # alt: ltf_ts
   leg_end_atr: 0.5                # PROPOSED                  (G-14)
   smt_confirm: model1_or_mss      # alt: model1_then_mss      (C-23)
-  require_smt: false              # (C-24)
+  require_smt: false              # (C-24; confirmed books/romeo-book p.178)
   smt_take: wick                  # alt: close
   smt_pairs: {EURUSD: [DXY_inv, GBPUSD], GBPUSD: [EURUSD, DXY_inv], USDCAD: [DXY], NQ: [ES, YM], ES: [NQ], BTCUSD: [ETHUSD], XAUUSD: [XAGUSD]}
   ob_entry_edge: near_edge        # alt: open, mid            (C-12)
@@ -1123,13 +1239,13 @@ entry:
   setup_expiry: c3_close          # sham mode: killzone_end   (CRT-R37)
 
 stop:
-  stop_mode: by_entry_type        # alt: fvg_fill_low          (C-20)
+  stop_mode: by_entry_type        # alt: fvg_fill_low, weekly_model_extreme (books/romeo-book p.7)  (C-20)
   ote_stop: leg_origin            # PROPOSED; alt: fib_079
   stop_buffer_ticks: 0            # PROPOSED
 
 targets:
-  target_mode: crt_levels         # alt: to_50_only, swings_one_by_one, ote_body, last_high_before_dump, r_multiple  (C-05)
-  tp1_fraction: 0.5               # PROPOSED share closed at the 50%
+  target_mode: crt_levels         # alt: to_50_only, swings_one_by_one, ote_body, last_high_before_dump, r_multiple, opposing_kl  (C-05)
+  tp1_fraction: 0.5               # share closed at the 50%; v0.2 sourced (books/romeo-book p.19, 36), no longer PROPOSED
   r_target: 3.0                   # sham mode; alt: 1, 2      (C-21)
   friday_r_target: 2.0            # (CRT-R67)
   time_exit: end_of_htf_candle    # PROPOSED; alt: none, end_of_killzone  (CRT-R56)
@@ -1138,17 +1254,17 @@ targets:
 
 invalidation:
   on_opposing_smt: close          # alt: breakeven, ignore    (CRT-R57)
-  decisive_closes: 2              # PROPOSED                  (CRT-R58)
+  decisive_closes: 2              # PROPOSED; alt: 1 (books/romeo-book p.45, market shift = one close)  (CRT-R58, G-16)
   on_first_close_beyond: warn     # alt: breakeven
   sham_invalid_atr: 1.0           # PROPOSED                  (CRT-R60)
 
 risk:
-  risk_per_trade: 0.01            # USER: 1% of equity        (CRT-R62)
+  risk_per_trade: 0.01            # USER: 1% of equity        (CRT-R62); notebook 0.5% is reference only (books/romeo-book p.243)
   instruments: [EURUSD, GBPUSD, XAUUSD]   # USER 2026-11-09; SMT pairs: EURUSD/GBPUSD (+DXY), XAUUSD/XAGUSD
   daily_loss_limit_r: 2.0         # USER: stop for the NY day at -2% (CRT-R63)
   max_open_risk: 0.01             # PROPOSED
   max_trades_per_day: 1           # (CRT-R64)
-  max_trades_per_week: 2
+  max_trades_per_week: 2          # alt: 4 (notebook risk model 3-4/week, reference only, books/romeo-book p.243)
   news_events: [FOMC]             # alt: [FOMC, NFP, CPI]  (only FOMC is sourced)  (CRT-R66)
   news_block: whole_day           # PROPOSED
   friday_flat_time: "16:00"       # PROPOSED from romeo/17   (CRT-R67)
@@ -1156,7 +1272,8 @@ risk:
 
 logging:
   log_weekly_stats: true          # (CRT-R70)
-  log_fields: [how_time, low_time, week_shape, kl_at_high, kl_at_low, purge_minute_in_h4, kod_pos_pct, closes_through_count, bars_to_tp1, bars_to_tp2, confluence_score, invalid_reason]
+  week_shape_mode: proxy6         # alt: sham_profiles (3 profiles x bull/bear, books/romeo-book p.118-123)  (G-03)
+  log_fields: [how_time, low_time, week_shape, week_of_month, kl_at_high, kl_at_low, kl_is_bos_origin, purge_minute_in_h4, purge_in_purge_hour, ts_at_open, close_inside, confirmations_count, market_profile_phase, kod_pos_pct, closes_through_count, bars_to_tp1, bars_to_tp2, confluence_score, invalid_reason]
 ```
 
 ---
@@ -1164,35 +1281,72 @@ logging:
 ## 8. Open questions for the user / Romeo's book
 
 **Data and time conventions**
-1. Which weekly candle does Romeo use for the weekly CRT range: Sunday 17:00 or Monday 00:00 open; Friday 16:00 or 17:00 close (C-02)? Does the book say?
-2. Daily candle: midnight NY (Romeo) or 17:00 NY broker day? Which chart settings does Sham use for D1 and 4H (C-03)? Which broker/data feed will the bot trade on?
-3. Monthly candle open time (not in any source).
+1. Which weekly candle does Romeo use for the weekly CRT range: Sunday 17:00 or Monday 00:00 open; Friday 16:00 or 17:00 close (C-02)? Does the book say? *v0.2: Sunday 17:00 open (books/romeo-book p.54, 214); Friday close not covered. Romeo's own book still to check.*
+2. Daily candle: midnight NY (Romeo) or 17:00 NY broker day? Which chart settings does Sham use for D1 and 4H (C-03)? Which broker/data feed will the bot trade on? *v0.2: daily 00:00 NY (p.56, 215); broker-day and Sham chart settings not covered.*
+3. Monthly candle open time (not in any source). *v0.2: not covered (weeks of the month counted 1–4, p.228 [S]).*
 
 **CRT structure (book)**
-4. How is the correct key level chosen ("types of key levels", "types of reactions", marking), promised but not taught (romeo/08, romeo/13)? This is the largest gap (G-01).
-5. The exact "six possibilities" of weekly candle anatomy (romeo/16) and the "strength classes" (romeo/17).
-6. Romeo's definition of "market profile" and how it gates the close/wick bias (romeo/16 23:33).
-7. Is the CRT 50% measured on C1's full wick range or on bodies?
-8. Must C2 close back inside by its own close, or can the close back inside come later after inside bars (romeo/02 open question)?
-9. Model #1: trigger on the model candle's wick high or body (C-07)? Must the model candle itself close back inside the level?
-10. Which LTF is used for the C3 turtle-soup entry on a daily CRT (romeo/10)? Which TF pairs apply to the CRTology OTE (romeo/18)?
-11. Where is the stop on an OTE entry (romeo/18)? What are the "narrower stops" not taught publicly (romeo/03)?
-12. Is KoD-R "lower 25% of the range" measured from the target side (romeo/05)?
-13. What is Romeo's intraday "time": which hours does he use to time the high/low of the day? Is "9:30" in romeo/14 New York time?
-14. What is a "clean close" (romeo/13 title, not defined)?
-15. What does the "SS" bullish/bearish week template look like for an inside week (romeo/16 25:22)?
+4. How is the correct key level chosen ("types of key levels", "types of reactions", marking), promised but not taught (romeo/08, romeo/13)? This is the largest gap (G-01). *v0.2: types yes (p.4–5 [R], p.205 [S]), selection rule **no**. Still open.*
+5. The exact "six possibilities" of weekly candle anatomy (romeo/16) and the "strength classes" (romeo/17). *v0.2: "six possibilities" and strength classes **not covered**; three weekly profiles × bull/bear only (p.118–123 [S]). Still open.*
+6. Romeo's definition of "market profile" and how it gates the close/wick bias (romeo/16 23:33). *v0.2: five phases + outcome table (p.87, 254 [S]); Sham's, not Romeo's own words.*
+7. Is the CRT 50% measured on C1's full wick range or on bodies? *v0.2: **answered**: full candle incl. wicks (p.249 [S]).*
+8. Must C2 close back inside by its own close, or can the close back inside come later after inside bars (romeo/02 open question)? *v0.2: preferred at C2's own close, not forced (p.249 [S]).*
+9. Model #1: trigger on the model candle's wick high or body (C-07)? Must the model candle itself close back inside the level? *v0.2: close beyond the model candle, enter at its high/low; wick vs body **not written** (p.27–28 [R]). Still open.*
+10. Which LTF is used for the C3 turtle-soup entry on a daily CRT (romeo/10)? Which TF pairs apply to the CRTology OTE (romeo/18)? *v0.2: daily = TS, 4H = CRT, 15m = entry (p.73, 253, 264 [S]); OTE TFs not covered.*
+11. Where is the stop on an OTE entry (romeo/18)? What are the "narrower stops" not taught publicly (romeo/03)? *v0.2: OTE stop not covered; tight stops get hit (p.69 [R]).*
+12. Is KoD-R "lower 25% of the range" measured from the target side (romeo/05)? *v0.2: not covered.*
+13. What is Romeo's intraday "time": which hours does he use to time the high/low of the day? Is "9:30" in romeo/14 New York time? *v0.2: NY time; 03–05 and 09–11 high-probability (p.28 [R]); key times and purge hours (p.228, 258 [S]).*
+14. What is a "clean close" (romeo/13 title, not defined)? *v0.2: not defined.*
+15. What does the "SS" bullish/bearish week template look like for an inside week (romeo/16 25:22)? *v0.2: not covered.*
 
 **Sham details**
-16. What is "closing hour logic" of the 4H candle (sham/08 19:31)?
+16. What is "closing hour logic" of the 4H candle (sham/08 19:31)? *v0.2: not covered. Still open (G-05).*
 17. The slide with OB timeframe combinations (sham/02 33:30) is not read aloud. Can the user capture it from the video frames?
-18. Is a counter-trend trade (sham/06 Tuesday) part of his core model? Does a neutral daily bias forbid all trades or only counter-bias trades (sham/11)?
-19. Must the 4H framing CRT match the D1 bias-CRT direction, or only the D1 dealing-range context (sham/08)?
-20. Which correlated asset is required for SMT on GBPUSD: EURUSD, DXY or both (sham/01)?
+18. Is a counter-trend trade (sham/06 Tuesday) part of his core model? Does a neutral daily bias forbid all trades or only counter-bias trades (sham/11)? *v0.2: counter-HTF trading avoided (p.101 [S], p.67–68 [R]); neutral-day rule not covered.*
+19. Must the 4H framing CRT match the D1 bias-CRT direction, or only the D1 dealing-range context (sham/08)? *v0.2: daily first, then the 4H CRT follows the daily draw (p.253, 264 [S]).*
+20. Which correlated asset is required for SMT on GBPUSD: EURUSD, DXY or both (sham/01)? *v0.2: EURUSD vs GBPUSD or DXY (p.174, 180 [S]).*
 
 **User decisions**
 21. Which mode should be built first: Romeo, Sham or hybrid? (Proposed: Romeo mode for structure, then add Sham timing as a filter.)
 22. Instruments to trade and test (the examples cover EURUSD, GBPUSD, USDCAD, DXY, XAUUSD, BTC/ETH, NQ). SMT needs a second symbol's data for each.
-23. Risk numbers: risk per trade, daily loss limit, max open risk, max trades per day/week (CRT-R62 to R64; no source gives values).
-24. Which news events besides FOMC should block trading, and for how long?
-25. Is entry inside C2 ever allowed (C-09)? Which HTFs (4H only, D, W) match your holding-time preference (C-10)?
-26. Can we get Sham's posted live trades (Twitter) and Romeo's live calls (X) with dates, to use as labelled test cases?
+23. Risk numbers: risk per trade, daily loss limit, max open risk, max trades per day/week (CRT-R62 to R64; no source gives values). *v0.2: notebook 0.5% / 3–4 trades a week (p.243, 264 [S]), reference only; **user decided 1% per trade and −2% daily** (CRT-R62/R63).*
+24. Which news events besides FOMC should block trading, and for how long? *v0.2: "use the news calendar", no list (p.117 [S]).*
+25. Is entry inside C2 ever allowed (C-09)? Which HTFs (4H only, D, W) match your holding-time preference (C-10)? *v0.2: candle 2 is for advanced students (p.263 [S]).*
+26. Can we get Sham's posted live trades (Twitter) and Romeo's live calls (X) with dates, to use as labelled test cases? *v0.2: dated 2024 chart examples in `books/romeo-book/11-chart-examples.md` (p.154–197 [S]).*
+
+---
+
+## 9. Changelog v0.1 → v0.2
+
+Date 2026-11-10. Source: the notebook notes in `research/notes/crt/books/romeo-book/` (section 6.3). Every changed or new default, with its reason. Nothing was deleted; old defaults are marked SUPERSEDED where they appear.
+
+| Parameter / entry | v0.1 | v0.2 | Reason |
+|---|---|---|---|
+| `rulebook_version` | "0.1" | "0.2" | This merge. |
+| `candles.week_open` (C-02, CRT-R44) | `mon_0000` | `sun_1700` (alt `mon_0000`) | Romeo videos are split; notebook p.54 [R], p.214 [Room] say Sunday 17:00 ("buy below Sunday's open"), which breaks the tie. |
+| `candles.week_sequence_start` | implicit | `mon_0000` (new) | Keeps Monday = C1 of the weekly template separate from the open price. |
+| `timeframes.kl_tf_for_htf` (C-01, CRT-R22) | `{W: M, D: W, 4H: D, 1H: 4H}` | adds `15m: 1H`; confidence high | Notebook p.205 [S] table = option (c), including 15m→1h. |
+| `timeframes.kl_tf_secondary` | – | `{W: Y, D: M, 4H: W, 1H: D, 15m: 4H}` (new) | The same table allows a second level one step further up (p.205 "+"). |
+| `key_level.kl_types` (G-01, CRT-R19) | five guide types | adds `bos_origin_hl` | Notebook [R] p.4–5 (ranks above the student guide): important highs/lows are those that broke structure. |
+| `key_level.kl_score_bos_bonus` (G-01) | – | `1` (new) | Same reason; the ranking algorithm itself is still a gap. |
+| `crt.close_inside_score` (C-04) | – (ignored when not required) | `true` (new) | Notebook p.249 [S]: close back inside is preferred, not required. Romeo mode keeps the hard rule (Romeo videos rank higher). |
+| `crt.min_confirmations` + `confirmation_types` (G-20) | proxy "all of bias, profile, KL, entry" | `3` of timed CRT / timed purge / HTF KL / inside bars / LTF CRT in HTF CRT | Fills the gap: notebook p.201, 203 [Room]. Old proxy SUPERSEDED. |
+| `crt.ts_timing_mode` (G-23, CRT-R36) | late sweep of the previous candle (`late_frac 0.8`) | `open_of_new` with `ts_at_open_frac 0.2` (PROPOSED); old proxy = variant `late_of_prev` | Notebook p.40, 41 [R], p.208 [Room]: high-probability TS at the open of a new candle. Proxy reversed. |
+| `crt.framing_model` (G-07) | – | `default` (alt `room_5am`: 05:00 4H CRT, purge 09:00–10:30, entry 2nd 15m close or 15m/5m OB) | Notebook p.201 [Room]; lowest rank, so a variant. |
+| `bias.market_profile_mode`, `trade_outcomes` (G-04) | Sham 4-profile proxy | `five_phase`, trade only expansion/reversal outcomes | Notebook p.87, 254 [S] gives the five phases and the outcome table (fills a hole). |
+| `bias.skip_if_monday_expansion`, `monday_expansion_adr` (G-26, CRT-R35) | – | `true`, `1.0` (PROPOSED threshold) | Notebook p.13 [R]: if Monday is an expansion do nothing. |
+| `bias.mid_range_block` (G-26, CRT-R21) | – | `[0.4, 0.6]` (PROPOSED band) | Notebook p.36 [R]: never enter in the middle of a range. |
+| `dealing_range.dr_require_sweep_both` (G-09) | – | `true` (new); `dr_require_fvg` stays `true`, alt `false` | Notebook p.96 [S]: DR forms after a swing low and high are taken. FVG kept because ICT ranks higher. |
+| `timing.purge_hours` (G-11, CRT-R32) | macros 03/06/09/11 only | `01, 03, 06, 08, 09, 11` (new) | Notebook p.258 [S]. 06:00 confirmed (C-15). |
+| `timing.refined_key_times`, `london_lunch` (G-11) | – | 03–04, 06–07, 08:30–09:30, 10–11; 05–07 | Notebook p.228 [S]. |
+| `timing.cbdr_window` (G-26) | – (ICT-K text only) | `14:00–20:00` (alt `16:00–20:00`) | Notebook p.148 [S] draws 16:00–20:00; ICT ranks higher, so it is the variant. |
+| `targets.tp1_fraction` (C-05) | 0.5 PROPOSED | 0.5 sourced | Notebook p.19, 36 [R]: take 50% off at the 50%. |
+| `targets.target_mode` alt (C-05) | – | adds `opposing_kl` | Notebook p.162 [S]. |
+| `stop.stop_mode` alt (C-20) | – | adds `weekly_model_extreme` | Notebook p.7 [R]. |
+| `invalidation.decisive_closes` alt (G-16) | – | adds alt `1` | Notebook p.45 [R]: one close confirms a market shift. Default 2 unchanged. |
+| `logging.week_shape_mode`, new log fields (G-03, G-06) | – | `proxy6` (alt `sham_profiles`); adds `week_of_month`, `kl_is_bos_origin`, `purge_in_purge_hour`, `ts_at_open`, `close_inside`, `confirmations_count`, `market_profile_phase` | Notebook p.118–123, 228 [S]. |
+| Confidence only: 4H grid, daily 00:00 (C-03), CRT 50% on full wicks (DEF-03, Q7), SMT not required (C-24), C3 fastest (C-18), counter-HTF off (C-22), discount/premium only (C-14) | – | unchanged defaults, citations added | Notebook confirms v0.1. |
+| Risk: `risk_per_trade`, `daily_loss_limit_r`, `max_trades_per_week` | 1%, −2%, 2 | **unchanged** | User decision. Notebook 0.5% and 3–4 trades/week noted as reference only (p.243, 264 [S]). |
+| Weekly 70% / 81% claims | backtest only | **backtest only** | No sample in the notebook either. |
+
+**Still open after v0.2:** G-05 closing-hour logic; G-03 Romeo's "six possibilities"; the key-level ranking algorithm (G-01 core); the OTE zone numbers (C-06/G-14); model #1 trigger on wick vs body (C-07/Q9). Romeo's own published book has still not been studied.
