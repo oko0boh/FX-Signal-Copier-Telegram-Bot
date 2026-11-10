@@ -191,7 +191,7 @@ def mss_ote(ltf_hist: Bars, direction: str, swept: float, c2_open_ns: int, cfg: 
     after = w.slice(slice(leg_idx + 1, len(w)))
     if len(after) and after.low.min() < deep:
         return _with_info(EntryResult(None, "fail", "retrace went through the deep edge of the zone"), info, s)
-    if kind == "ote" and e.ote_stop == "fib_079":
+    if kind == "ote" and cfg.stop.ote_stop == "fib_079":
         stop = top - 0.79 * span - buffer
     else:
         stop = l2 - buffer

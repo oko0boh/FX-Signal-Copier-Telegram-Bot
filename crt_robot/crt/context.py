@@ -204,7 +204,7 @@ def dealing_range(b: Bars, cfg: StrategyConfig) -> DealingRange | None:
     sw = sw[sw.known_at < len(df)]
     if len(sw) < 2:
         return None
-    a = atr(df, cfg.general.atr_len)
+    a = atr(df, min(cfg.general.atr_len, max(2, len(df) // 2)))
     fvgs = detect_fvgs(df) if d.dr_require_fvg else None
     rows = list(sw.sort_values("idx").itertuples())
     for j in range(len(rows) - 1, 0, -1):

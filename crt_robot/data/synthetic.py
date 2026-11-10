@@ -53,3 +53,24 @@ def random_walk(
         for c in ("open", "high", "low", "close"):
             df[f"ask_{c}"] = df[c] + spread
     return df
+
+
+def from_waypoints(points: list[tuple[str, float]], start: str, end: str, noise: float = 0.0,
+                   wick: float = 0.00001, seed: int = 0) -> pd.DataFrame:
+    """Minute bars that follow straight lines between ``(NY time, price)``
+    waypoints (flat before the first / after the last), for scripted CRT
+    fixtures in tests. TESTS ONLY: this is a drawing, not market data."""
+    idx = fx_minutes(start, end)
+    t = np.asarray(idx.asi8, dtype=float)
+    wt = np.array([pd.Timestamp(a, tz=NY_TZ).tz_convert("UTC").value for a, _ in points], dtype=float)
+    wp = np.array([p for _, p in points], dtype=float)
+    order = np.argsort(wt)
+    path = np.interp(t, wt[order], wp[order])
+    rng = np.random.default_rng(seed)
+    if noise:
+        path = path + rng.normal(0.0, noise, len(path))
+    close = path
+    open_ = np.concatenate([[path[0]], close[:-1]])
+    high = np.maximum(open_, close) + wick
+    low = np.minimum(open_, close) - wick
+    return pd.DataFrame({"open": open_, "high": high, "low": low, "close": close}, index=idx)
