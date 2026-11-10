@@ -1,0 +1,19 @@
+# Sham mode: D1 bias (structure x close matrix, CRT-R08), 4H framing CRT
+# (closed candle opening 21/01/05, CRT-R28), purge of it on 15m inside a key
+# time (CRT-R32), 15m order block in key time (CRT-R33), limit at the OB edge,
+# stop beyond the OB, 3R target (2R Friday). No Asia trading (CRT-R34).
+general: {strategy_mode: sham}
+timeframes: {htf_allowed: [4H]}
+bias: {bias_inputs: [structure, close_wick], bias_tf: parent}
+dealing_range: {dr_tf: htf, rebalance_required: true}
+crt: {require_close_inside: {W: true, D: true, 4H: false}}
+entry:
+  entry_set: [ob]
+  setup_expiry: killzone_end
+targets:
+  target_mode: r_multiple
+  time_exit: none
+timing:
+  require_timed_purge: true
+  require_timed_entry: true
+  use_asia_block: true

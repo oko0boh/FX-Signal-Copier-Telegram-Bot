@@ -1,0 +1,200 @@
+# CRT strategy parameters = research/notes/CRT_RULEBOOK.md section 7 (v0.2).
+#
+# Every key of section 7 is here with its v0.2 default; the `alt` values
+# from the rulebook are kept in the comments and are selectable. Keys marked
+# "PHASE 2 (PROPOSED)" are new switches the code needed to turn a rule into
+# a computation; they are NOT from any source. Mode overlays live in
+# config/strategy/modes/{romeo,sham,hybrid}.yaml and only override keys.
+#
+# Loaded by crt_robot.crt.config.load_config(); unknown keys are an error.
+
+rulebook_version: "0.2"
+
+# ---------------------------------------------------------------------------
+# Clock decisions (rulebook C-02 / C-03 vs Phase 1). Made explicit here.
+#   Phase 1 builds every candle on the MT5 broker clock (NY + 7h), which gives
+#   the 4H grid 01/05/09/13/17/21 NY. Two daily candles exist:
+#     D    = broker day, 17:00 NY -> 17:00 NY   (Phase 1 user decision: broker clock)
+#     D_NY = 00:00 NY -> 00:00 NY               (rulebook default daily_open "00:00")
+#   The weekly candle W opens Sunday 17:00 NY and closes Friday 17:00 NY
+#   (= rulebook v0.2 week_open / week_range_from sun_1700).
+# ---------------------------------------------------------------------------
+clock:
+  daily_candle: D_NY              # must match candles.daily_open ("00:00" -> D_NY, "17:00" -> D)
+  weekly_candle: W                # W = Sun 17:00 range (week_range_from sun_1700); mon_0000 builds Mon-Fri weeks from D_NY bars
+  skip_sunday_stub: true          # PHASE 2 (PROPOSED): the D_NY Sunday 17:00-24:00 stub is never a CRT candle / bias candle
+  monthly_from: daily             # PHASE 2: monthly bars are aggregated from closed daily bars (calendar month of the NY date)
+
+general:
+  strategy_mode: romeo            # alt: sham, hybrid           (C-19)
+  timezone: America/New_York
+  atr_len: 14                     # PROPOSED
+  swing_n: 2                      # PROPOSED; alt: 3, 5        (G-02)
+  sweep_min_ticks: 1              # PROPOSED
+  ts_close_back_bars: 1           # PROPOSED; alt: 2, 3        (DEF-06)
+
+candles:
+  daily_open: "00:00"             # alt: "17:00"               (C-03)
+  h4_grid_first_open: "01:00"     # alt: "00:00"  (only 01:00 is built: broker clock)  (C-03)
+  week_open: sun_1700             # alt: mon_0000              (C-02) open PRICE reference
+  week_range_from: sun_1700       # alt: mon_0000              (C-02) which bars count for weekly H/L
+  week_sequence_start: mon_0000   # Monday = C1 of the weekly template (CRT-R35)
+  week_close: fri_1700            # alt: fri_1600              (C-02)
+  max_inside_bars: 3              # PROPOSED                   (CRT-R26)
+
+timeframes:
+  htf_allowed: [4H, D, W]         # alt: [D, W], [4H], [W, M]   (C-10)
+  tf_pairs: {M: D, W: 4H, D: 1H, 4H: 15m}     # alt: {M: 4H, W: 1H, D: 15m, 4H: 5m}  (C-01)
+  kl_tf_for_htf: {W: M, D: W, 4H: D, 1H: 4H, 15m: 1H}  # (CRT-R22)
+  kl_tf_secondary: {W: Y, D: M, 4H: W, 1H: D, 15m: 4H}  # second level one step further up
+  use_kl_tf_secondary: true       # PHASE 2 (PROPOSED): also collect candidates on kl_tf_secondary (Y is not built)
+  tf_pairs_alt_notebook: {W: H1, D: M15, 4H: M15, 1H: M5, 15m: M1}  # variant only
+  sham_stack: {bias: D, framing: 4H, entry: 15m}
+
+bias:
+  bias_inputs: [close_wick]       # sham: [structure, close_wick]; alt add: weekly_ohlc, monthly_ohlc, smt  (C-13)
+  bias_gate: hard                 # PHASE 2 (PROPOSED): hard = setup dir must equal the bias; score = +1 only
+  bias_tf: parent                 # PHASE 2 (PROPOSED): parent = one step above the CRT TF (4H->D, D->W, W->M); alt: weekly
+  structure_break: close          # alt: wick
+  bias_crt_days: [Mon, Tue, Wed]  # (CRT-R10)
+  bias_crt_target: opposite_extreme   # alt: dr_eq            (C-25)
+  allow_counter_htf: false        # (CRT-R05, C-22)
+  allow_delivered_counter: false  # (CRT-R17)
+  delivered_adr_mult: 5           # PROPOSED
+  ranging_adr_frac: 0.5           # PROPOSED                  (CRT-R13)
+  near_target_atr: 0.5            # PROPOSED                  (CRT-R11)
+  use_weekly_time_theory: true    # (CRT-R14)
+  romeo_sweep_days: [Mon, Tue, Wed]   # alt: all              (CRT-R35)
+  skip_if_monday_expansion: true  # (G-26)
+  monday_expansion_adr: 1.0       # PROPOSED
+  mid_range_block: [0.4, 0.6]     # PROPOSED band (G-26)
+  market_profile_mode: five_phase # alt: romeo_swings, sham4, none  (G-04)
+  trade_outcomes: [expansion, reversal]
+  profile_k: 2                    # PROPOSED (G-04 romeo_swings)
+
+dealing_range:
+  dr_tf: parent                   # PHASE 2 (PROPOSED): DR on the bias TF; sham uses the framing 4H (CRT-R28)
+  dr_min_atr: 2.0                 # PROPOSED                  (G-09)
+  dr_require_sweep_both: true     # (G-09)
+  dr_require_fvg: true            # ICT-K; alt: false
+  require_correct_half: true      # PHASE 2 switch for CRT-R21 (premium for sells, discount for buys)
+  rebalance_required: false       # sham overlay: true          (C-14, CRT-R16)
+  rebalance_level: eq             # alt: premium_fvg
+  kod_s_dist: 0.25                # PROPOSED fraction of DR height  (CRT-R16)
+  kod_r_requires_tp1: false       # G-15
+  weekly_model: none              # alt: wednesday
+  fvg_fill: touch                 # PROPOSED; alt: half, full (DEF-17)
+
+key_level:
+  kl_types: [old_high, old_low, bos_origin_hl, fvg, ob, rb]   # variants: + breaker, prev_period_hl, candle_open, weekly_wick_50
+  kl_score_bos_bonus: 1
+  kl_select: score                # PROPOSED; alt: nearest    (G-01)
+  kl_max_dist_atr: 1.5            # PROPOSED
+  kl_touch_tol: 0.0               # PROPOSED, in ATR(ltf)     (CRT-R20)
+  visible_lookback: 12            # PROPOSED                  (G-17)
+  kl_lookback_bars: 60            # PHASE 2 (PROPOSED): closed KL-TF bars searched (~IPDA 60 days on D)
+  ob_liquidity: same_tf_swing     # PHASE 2 (PROPOSED, G-13): KL-TF OB liquidity = sweep of a same-TF fractal swing
+
+crt:
+  require_close_inside: {W: true, D: true, 4H: true}   # sham: 4H false; alt romeo: 4H false  (C-04)
+  close_inside_score: true
+  min_confirmations: 3            # alt: 2, 4                  (G-20)
+  confirmation_types: [timed_crt, timed_purge, htf_key_level, inside_bars, ltf_crt_inside_htf]
+  timed_crt_h4_opens: ["01:00", "05:00", "09:00"]   # PHASE 2 (PROPOSED from 1-5-9): a 4H CRT is "timed" if C1 opens here; D/W are always timed
+  framing_model: default          # alt: room_5am             (G-07)
+  room_5am: {crt_open: "05:00", ltf: 15m, purge_window: ["09:00", "10:30"], entry: second_15m_close, entry_alt: [ob_15m, ob_5m]}
+  allow_c2_entry: false           # (C-09)
+  framing_candle_opens: ["21:00", "01:00", "05:00"]    # PROPOSED  (CRT-R28)
+  allow_reselect: true            # (C-16)
+  ts_timing_mode: open_of_new     # alt: late_of_prev
+  ts_at_open_frac: 0.2            # PROPOSED
+  late_frac: 0.8                  # PROPOSED
+  model1_c2_trigger: retest       # PHASE 2 (PROPOSED): model #1 that already triggered inside C2 -> retest = limit at the model candle in C3; alt: skip
+
+timing:
+  killzones:
+    london_open: ["02:00", "05:00"]
+    new_york:    ["07:00", "10:00"]
+    london_close: ["10:00", "12:00"]
+  index_killzones:
+    ny_am: ["08:30", "11:00"]
+    ny_lunch: ["12:00", "13:00"]
+    ny_pm: ["13:30", "16:00"]
+  macros: ["03:00", "06:00", "09:00", "11:00"]
+  purge_hours: ["01:00", "03:00", "06:00", "08:00", "09:00", "11:00"]
+  refined_key_times: [["03:00", "04:00"], ["06:00", "07:00"], ["08:30", "09:30"], ["10:00", "11:00"]]
+  london_lunch: ["05:00", "07:00"]
+  cbdr_window: ["14:00", "20:00"]   # alt: ["16:00", "20:00"]
+  macro_window: hour              # PROPOSED; alt: ict        (G-11)
+  key_time_strictness: killzone_or_macro   # alt: macro_only
+  require_timed_purge: false      # PHASE 2 switch for CRT-R32 (sham/hybrid: true)
+  require_timed_entry: false      # PHASE 2 switch for CRT-R33 (sham: true)
+  asia_block: ["20:00", "02:00"]  # sham mode (CRT-R34)
+  use_asia_block: false           # PHASE 2 switch (sham/hybrid: true)
+  asia_block_romeo: false
+  romeo_use_killzones: false      # PROPOSED                  (G-22)
+  closing_hour_filter: none       # PROPOSED; alt: first, last  (G-05; still open)
+
+entry:
+  entry_set: [model1, mss]        # PHASE 2: which entry functions run; romeo = romeo_entry_set, sham: [ob]
+  romeo_entry_set: [model1, mss]  # alt: [model1], [mss], [model1, mss, ote]   (C-08)
+  require_thick: true
+  thick_body_ratio: 0.6           # PROPOSED                  (G-08)
+  thick_atr_mult: 1.0             # PROPOSED
+  model1_trigger_ref: wick        # alt: body                 (C-07)
+  model1_entry: close             # alt: model_high
+  mss_entry_zone: ote             # alt: full_retrace         (CRT-R40)
+  mss_lookback_bars: 48           # PHASE 2 (PROPOSED): LTF bars before C2 searched for the swing high that broke the low
+  ote_zone: [0.50, 0.79]          # alt: [0.62, 0.79], [0.382, 0.79]  (C-06)
+  ote_fib_basis: wick             # alt: body, union, intersection
+  ote_trigger: touch              # alt: ltf_ts
+  leg_end_atr: 0.5                # PROPOSED                  (G-14)
+  smt_confirm: model1_or_mss      # alt: model1_then_mss      (C-23)
+  require_smt: false              # (C-24)
+  smt_take: wick                  # alt: close
+  smt_pairs: {EURUSD: [DXY_inv, GBPUSD], GBPUSD: [EURUSD, DXY_inv], USDCAD: [DXY], NQ: [ES, YM], ES: [NQ], BTCUSD: [ETHUSD], XAUUSD: [XAGUSD]}
+  ob_entry_edge: near_edge        # alt: open, mid            (C-12)
+  ob_max_candles: 4               # PROPOSED                  (G-12)
+  ob_liq_tf_steps: 1              # PROPOSED                  (G-13)
+  min_confluence: 0               # PROPOSED; log only        (CRT-R46)
+  max_entries_per_setup: 1        # alt: 2                    (CRT-R48)
+  setup_expiry: c3_close          # sham: killzone_end        (CRT-R37)
+
+stop:
+  stop_mode: by_entry_type        # alt: fvg_fill_low, weekly_model_extreme  (C-20)
+  ote_stop: leg_origin            # PROPOSED; alt: fib_079
+  stop_buffer_ticks: 0            # PROPOSED
+
+targets:
+  target_mode: crt_levels         # alt: to_50_only, r_multiple, swings_one_by_one, ote_body, last_high_before_dump, opposing_kl  (C-05)
+  tp1_fraction: 0.5
+  r_target: 3.0                   # sham; alt: 1, 2           (C-21)
+  friday_r_target: 2.0            # (CRT-R67)
+  time_exit: end_of_htf_candle    # PROPOSED; alt: none, end_of_killzone  (CRT-R56)
+  be_after_tp1: false             # alt: true                 (CRT-R68)
+  weak_ts_atr: 0.25               # PROPOSED                  (G-24)
+
+invalidation:
+  on_opposing_smt: close          # alt: breakeven, ignore    (CRT-R57)
+  decisive_closes: 2              # PROPOSED; alt: 1          (CRT-R58, G-16)
+  on_first_close_beyond: warn     # alt: breakeven
+  sham_invalid_atr: 1.0           # PROPOSED                  (CRT-R60)
+  skip_if_50_reached: true        # PHASE 2 switch for CRT-R45 ("no chasing": 50% hit before entry -> skip)
+
+risk:
+  risk_per_trade: 0.01            # USER: 1% of equity        (CRT-R62)
+  instruments: [EURUSD, GBPUSD, XAUUSD]
+  daily_loss_limit_r: 2.0         # USER: stop for the NY day at -2% (CRT-R63)
+  max_open_risk: 0.01             # PROPOSED (one position per run in Phase 2)
+  max_trades_per_day: 1           # (CRT-R64)
+  max_trades_per_week: 2          # alt: 4
+  news_events: [FOMC]             # alt: [FOMC, NFP, CPI]     (CRT-R66)
+  news_block: whole_day           # PROPOSED
+  news_calendar: config/news/fomc.yaml   # PHASE 2: dates file for the blackout hook
+  friday_flat_time: "16:00"       # PROPOSED                  (CRT-R67)
+  no_weekend_holds: true
+
+logging:
+  log_weekly_stats: true          # (CRT-R70)
+  week_shape_mode: proxy6         # alt: sham_profiles        (G-03)
+  log_fields: [how_time, low_time, week_shape, week_of_month, kl_at_high, kl_at_low, kl_is_bos_origin, purge_minute_in_h4, purge_in_purge_hour, ts_at_open, close_inside, confirmations_count, market_profile_phase, kod_pos_pct, closes_through_count, bars_to_tp1, bars_to_tp2, confluence_score, invalid_reason]

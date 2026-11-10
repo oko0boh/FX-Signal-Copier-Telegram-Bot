@@ -121,6 +121,18 @@ class Snapshot:
     def base_array(self, field: str) -> np.ndarray:
         return _readonly(self._v._base_arrays[field][: self.i + 1])
 
+    def base_times(self) -> tuple[np.ndarray, np.ndarray]:
+        """(open_times, close_times) of base bars 0..i as int64 UTC ns."""
+        v = self._v
+        return _readonly(v.index.asi8[: self.i + 1]), _readonly(v._now[: self.i + 1])
+
+    @property
+    def base_len(self) -> pd.Timedelta:
+        return self._v.base_len
+
+    def has_tf(self, tf: str) -> bool:
+        return tf in self._v._tf
+
     def last(self, field: str = "close", back: int = 0) -> float:
         """Base value ``back`` bars ago (0 = current, just-closed bar)."""
         if back < 0:
@@ -150,6 +162,16 @@ class Snapshot:
     def closed_array(self, tf: str, field: str) -> np.ndarray:
         d = self._tf(tf)
         return _readonly(d.arrays[field][: int(d.n_closed[self.i])])
+
+    def closed_times(self, tf: str) -> tuple[np.ndarray, np.ndarray]:
+        """(open_times, close_times) of the closed ``tf`` bars as int64 UTC ns."""
+        d = self._tf(tf)
+        k = int(d.n_closed[self.i])
+        return _readonly(d.open_times[:k]), _readonly(d.close_times[:k])
+
+    @property
+    def now_ns(self) -> int:
+        return int(self._v._now[self.i])
 
     def closed_bar(self, tf: str, back: int = 1) -> pd.Series:
         """``back``-th most recent closed bar (1 = latest closed)."""

@@ -1,0 +1,18 @@
+# Hybrid mode (rulebook C-19): Romeo structure (C2 turtle soup at the close,
+# key level, C3 entry, 50% / opposite-extreme targets) + Sham timing (timed
+# purge, no Asia) + either entry family (model #1, true MSS or a 15m OB).
+general: {strategy_mode: hybrid}
+timeframes: {htf_allowed: [4H, D]}
+bias: {bias_inputs: [close_wick], allow_counter_htf: false}
+crt: {require_close_inside: {W: true, D: true, 4H: true}}
+entry:
+  entry_set: [model1, mss, ob]
+  setup_expiry: c3_close
+targets:
+  target_mode: crt_levels
+  time_exit: end_of_htf_candle
+timing:
+  require_timed_purge: true
+  require_timed_entry: false
+  use_asia_block: true
+dealing_range: {rebalance_required: false}

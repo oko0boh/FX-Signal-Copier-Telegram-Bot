@@ -28,6 +28,8 @@ class Order:
     expiry: pd.Timestamp | None = None
     exit_at: pd.Timestamp | None = None
     tag: str = ""
+    tp1: float | None = None          # partial take-profit level (CRT-R53 TP1)
+    tp1_fraction: float = 0.0         # share of the lots closed at tp1
 
     def __post_init__(self):
         if self.side not in (LONG, SHORT):
@@ -44,6 +46,12 @@ class Order:
                 raise ValueError("short stop must be above the entry price")
             if self.target is not None and (self.target - ref) * self.side <= 0:
                 raise ValueError("target must be on the profit side of the entry price")
+            if self.tp1 is not None and (self.tp1 - ref) * self.side <= 0:
+                raise ValueError("tp1 must be on the profit side of the entry price")
+        if not 0.0 <= self.tp1_fraction < 1.0:
+            raise ValueError("tp1_fraction must be in [0, 1)")
+        if self.tp1 is not None and self.target is not None and (self.target - self.tp1) * self.side <= 0:
+            raise ValueError("tp1 must lie between the entry and the final target")
 
 
 @dataclass(frozen=True)
@@ -55,6 +63,13 @@ class ClosePosition:
 @dataclass(frozen=True)
 class CancelPending:
     """Cancel all pending entry orders."""
+
+
+@dataclass(frozen=True)
+class ModifyStop:
+    """Move the open position's stop (e.g. to break-even) from the next bar."""
+    price: float
+    reason: str = "strategy"
 
 
 @dataclass
@@ -70,6 +85,13 @@ class Position:
     entry_kind: str
     exit_at: pd.Timestamp | None
     tag: str = ""
+    tp1: float | None = None
+    tp1_fraction: float = 0.0
+    tp1_done: bool = False
+    realized_pnl: float = 0.0       # booked by the tp1 partial
+    initial_lots: float = 0.0
+    tp1_time: pd.Timestamp | None = None
+    tp1_commission: float = 0.0
 
 
 @dataclass
@@ -81,3 +103,4 @@ class StrategyState:
     can_trade: bool
     trades_today: int = 0
     extra: dict = field(default_factory=dict)
+    entries_total: int = 0          # fills so far in this run (lets a strategy see a same-bar stop-out)

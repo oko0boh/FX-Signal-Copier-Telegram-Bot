@@ -1,0 +1,18 @@
+# Romeo mode: Romeo decides CRT structure (C1/C2/C3, close back inside on
+# every TF, C3 entries with model #1 / true MSS / OTE, 50% + opposite-extreme
+# targets). No Sham timing gates. Rulebook section 4 "v0.1 default" column.
+general: {strategy_mode: romeo}
+timeframes: {htf_allowed: [4H, D, W]}
+bias: {bias_inputs: [close_wick]}
+crt: {require_close_inside: {W: true, D: true, 4H: true}}
+entry:
+  entry_set: [model1, mss]
+  setup_expiry: c3_close
+targets:
+  target_mode: crt_levels
+  time_exit: end_of_htf_candle
+timing:
+  require_timed_purge: false
+  require_timed_entry: false
+  use_asia_block: false
+dealing_range: {rebalance_required: false}

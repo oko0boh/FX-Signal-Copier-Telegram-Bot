@@ -128,3 +128,73 @@ def test_metrics_helpers():
     assert max_drawdown([100, 120, 90, 130]) == pytest.approx(0.25)
     s = r_stats(np.array([1.0, -1.0, 2.0, -1.0]))
     assert s["n"] == 4 and s["mean_r"] == pytest.approx(0.25) and s["profit_factor"] == pytest.approx(1.5)
+
+
+# ---- Phase 2 additions: tp1 partial and ModifyStop -------------------------
+
+from crt_robot.backtest.orders import ModifyStop  # noqa: E402
+
+
+class _OneShot:
+    """Buy once at a fixed bar with a tp1 partial; optionally move the stop."""
+
+    name = "test_one_shot_tp1"
+
+    def __init__(self, at: int, stop: float, tp1: float, target: float, frac: float = 0.5,
+                 be_at: int | None = None):
+        self.at, self.stop, self.tp1, self.target, self.frac, self.be_at = at, stop, tp1, target, frac, be_at
+        self.entry = None
+
+    def on_bar(self, snap, state):
+        if snap.i == self.at:
+            return [Order(LONG, stop=self.stop, target=self.target, tp1=self.tp1, tp1_fraction=self.frac)]
+        if self.be_at is not None and snap.i == self.be_at and state.position is not None:
+            return [ModifyStop(state.position.entry)]
+        return []
+
+
+def _path(prices):
+    rows = [(p, p + 0.00001, p - 0.00001, p) for p in prices]
+    from crt_robot.tests.fixtures import bars
+    return bars(rows, start="2024-01-09 03:00", freq="1min")
+
+
+def test_tp1_partial_then_target_books_one_trade():
+    from crt_robot.backtest.engine import Backtester
+    from crt_robot.data.instruments import get_instrument
+    prices = [1.1000] * 3 + [1.1010, 1.1020, 1.1030, 1.1040]
+    df = _path(prices)
+    res = Backtester(df, get_instrument("EURUSD"), htfs=("15m",)).run(
+        _OneShot(at=1, stop=1.0990, tp1=1.1015, target=1.1035), log=False)
+    t = res.trades
+    assert len(t) == 1
+    row = t.iloc[0]
+    assert row.reason == "target" and bool(row.tp1_hit)
+    assert row.tp1_pnl > 0 and row.pnl > row.tp1_pnl
+    # half closed at tp1, half at target: total R between the two single-exit outcomes
+    assert 1.0 < row.r < 3.5
+
+
+def test_tp1_partial_then_breakeven_stop():
+    from crt_robot.backtest.engine import Backtester
+    from crt_robot.data.instruments import get_instrument
+    prices = [1.1000] * 3 + [1.1010, 1.1020, 1.1010, 1.1000, 1.0995, 1.0990]
+    df = _path(prices)
+    res = Backtester(df, get_instrument("EURUSD"), htfs=("15m",)).run(
+        _OneShot(at=1, stop=1.0980, tp1=1.1015, target=1.1050, be_at=4), log=False)
+    row = res.trades.iloc[0]
+    assert row.reason == "stop" and bool(row.tp1_hit)
+    assert abs(row.stop - row.entry) < 1e-9          # moved to break-even
+    assert row.pnl > 0                              # the partial paid; the rest ~flat (minus costs)
+
+
+def test_stop_and_tp1_in_same_bar_stops_out_whole_position():
+    from crt_robot.backtest.engine import Backtester
+    from crt_robot.data.instruments import get_instrument
+    from crt_robot.tests.fixtures import bars
+    rows = [(1.1, 1.10001, 1.09999, 1.1)] * 3 + [(1.1, 1.1020, 1.0980, 1.1)]
+    df = bars(rows, start="2024-01-09 03:00", freq="1min")
+    res = Backtester(df, get_instrument("EURUSD"), htfs=("15m",)).run(
+        _OneShot(at=1, stop=1.0990, tp1=1.1010, target=1.1030), log=False)
+    row = res.trades.iloc[0]
+    assert row.reason == "stop" and not bool(row.tp1_hit) and row.r < -0.9

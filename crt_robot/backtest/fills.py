@@ -88,3 +88,14 @@ def market_exit(pos: Position, price_bid: float, spread: float, slippage: float)
 def mark(pos: Position, bar: BarPrices) -> float:
     """Exit-side price used for mark-to-market at the bar close."""
     return bar.c if pos.side == LONG else bar.ask_c
+
+
+def tp1_fill(pos: Position, bar: BarPrices, entry_bar: bool) -> float | None:
+    """Price of the partial take-profit if ``tp1`` trades on this bar. Like the
+    final target it is ignored on the entry bar of a limit/stop order, and the
+    caller checks the stop first (a bar that hits both stops out)."""
+    if pos.tp1 is None or pos.tp1_done or (entry_bar and pos.entry_kind != "market"):
+        return None
+    if pos.side == LONG:
+        return float(pos.tp1) if bar.h >= pos.tp1 else None
+    return float(pos.tp1) if bar.ask_l <= pos.tp1 else None
