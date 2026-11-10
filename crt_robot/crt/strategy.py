@@ -50,7 +50,7 @@ def view_timeframes(cfg: StrategyConfig, base_tf: str = "1m") -> tuple[str, ...]
 
 class CRTStrategy:
     def __init__(self, cfg: StrategyConfig, symbol: str = "EURUSD", peers: list[PeerFeed] | None = None,
-                 instrument: Instrument | None = None):
+                 instrument: Instrument | None = None, trade_from: pd.Timestamp | None = None):
         check_implemented(cfg)
         self.cfg = cfg
         self.mode = cfg.mode
@@ -72,6 +72,8 @@ class CRTStrategy:
         self.htfs = list(cfg.timeframes.htf_allowed)
         self.tick = self.inst.tick
         self.buffer = cfg.stop.stop_buffer_ticks * self.tick
+        # warm-up: history before ``trade_from`` only feeds levels / ATR, no setups
+        self.trade_from_ns = int(pd.Timestamp(trade_from).value) if trade_from is not None else None
 
     # ------------------------------------------------------------------
     def on_bar(self, snap: Snapshot, state: StrategyState) -> list:
@@ -131,6 +133,8 @@ class CRTStrategy:
     # detection
     # ------------------------------------------------------------------
     def _on_htf_close(self, md: MarketData, htf: str) -> None:
+        if self.trade_from_ns is not None and md.now_ns < self.trade_from_ns:
+            return
         if self.flow == "framing":
             if htf == self.cfg.timeframes.sham_stack["framing"]:
                 self._detect_framing(md, htf)
@@ -196,6 +200,9 @@ class CRTStrategy:
         c1, inside = mother_index(b, k + 1, cfg.candles.max_inside_bars)
         bias, structure, cls = ctx.sham_bias(crt_bars(md.bars("D"), cfg.clock.skip_sunday_stub), cfg.general.swing_n)
         direction = bias if bias in (BULL, BEAR) else BULL
+        c1_open = int(b.open_time[c1])
+        if any(o.c1_open_ns == c1_open and o.htf == htf and o.direction == direction for o in self.setups[-12:]):
+            return          # the same mother candle is already framed (DEF-27)
         s = self._new_setup(md, htf, b, c1, direction, purpose="framing")
         s.inside_bars = inside
         self.setups.append(s)
@@ -377,6 +384,18 @@ class CRTStrategy:
         if cfg.entry.require_smt and not s.gate("C-24", "smt_required", bool(smt_hit), smt_hit):
             return s.reject("no_smt")
 
+    def _kl_probe(self, md: MarketData, s: Setup) -> bool:
+        """Cheap check: has the purge reached any key level yet?"""
+        cfg = self.cfg
+        before = s.c2_open_ns if self.flow == "c2_close" else s.c1_close_ns
+        cands = keylevels.candidates(md, cfg, s.htf, s.direction, before, s.htf)
+        atr_htf = keylevels.atr_last(md.bars(s.htf), cfg.general.atr_len)
+        atr_ltf = keylevels.atr_last(md.bars(s.ltf), cfg.general.atr_len)
+        best, _ = keylevels.score_and_select(cands, direction=s.direction, swept_extreme=s.swept_extreme,
+                                             purge_extreme=s.sweep_extreme, atr_htf=atr_htf, atr_ltf=atr_ltf,
+                                             eq=None, kl_bars_low=None, kl_bars_high=None, cfg=cfg)
+        return best is not None
+
     def _smt(self, md: MarketData, s: Setup) -> bool | None:
         if not self.peers or s.c2 is None:
             return None
@@ -501,29 +520,38 @@ class CRTStrategy:
         cfg = self.cfg
         now = md.now_ns
         after = ltf.since(s.c1_close_ns)
-        if s.c2 is None:      # waiting for the purge
-            if len(after) == 0:
-                return []
-            hit = after.low < s.crt_low if s.direction == BULL else after.high > s.crt_high
-            if not hit.any():
-                # setup lapses when the next framing candle could take over (same NY day)
-                if now - s.c1_close_ns > 24 * 3600 * 10**9:
-                    s.state, s.invalid_reason = "expired", "no_purge"
-                return []
-            j = int(np.argmax(hit))
-            s.sweep_ns = int(after.open_time[j])
-            seg = after.slice(slice(j, len(after)))
+        if not s.extra.get("gated"):
+            if s.sweep_ns is None:      # waiting for the purge (CRT-R27: only after C1 closed)
+                if len(after) == 0:
+                    return []
+                hit = after.low < s.crt_low if s.direction == BULL else after.high > s.crt_high
+                if not hit.any():
+                    if now - s.c1_close_ns > 24 * 3600 * 10**9:
+                        s.state, s.invalid_reason = "expired", "no_purge"
+                    return []
+                j = int(np.argmax(hit))
+                s.sweep_ns = int(after.open_time[j])
+                s.c2 = {"open_time": s.sweep_ns, "close_time": int(after.close_time[j]),
+                        "high": float(after.high[j]), "low": float(after.low[j]),
+                        "open": float(after.open[j]), "close": float(after.close[j])}
+                s.expiry_ns = _next_killzone_end(s.sweep_ns, cfg)
+                s.log("CRT-R27", "purge_after_crt_close", "pass", ny(s.sweep_ns).strftime("%a %H:%M"))
+                s.log("CRT-R37", "setup_expiry", "info", f"{ny(s.expiry_ns):%a %H:%M}")
+            seg = after.since(s.sweep_ns)
             s.sweep_extreme = float(seg.low.min()) if s.direction == BULL else float(seg.high.max())
-            s.c2 = {"open_time": s.sweep_ns, "close_time": int(after.close_time[j]), "high": float(after.high[j]),
-                    "low": float(after.low[j]), "open": float(after.open[j]), "close": float(after.close[j])}
-            s.log("CRT-R27", "purge_after_crt_close", "pass", ny(s.sweep_ns).strftime("%a %H:%M"))
+            # CRT-R23: the purge may tag the key level later inside the killzone; wait until expiry
+            if not self._kl_probe(md, s):
+                if s.check("key_level_pending") is None:
+                    s.log("CRT-R23", "key_level_pending", "pending", None, "purge has not reached a key level yet")
+                if now >= s.expiry_ns:
+                    s.log("CRT-R23", "key_level_reached", "fail", None, "no key level tagged before the killzone ended")
+                    s.state, s.invalid_reason = "invalidated", "key_level_missed"
+                return []
+            s.extra["gated"] = True
             self._common_gates(md, s, purge_extreme=s.sweep_extreme, c2_known=False)
-            if s.state != "candidate" and s.state != "armed":
+            if s.state not in ("candidate", "armed"):
                 return []
             s.state = "armed"
-            end = _next_killzone_end(s.sweep_ns, cfg)
-            s.expiry_ns = end
-            s.log("CRT-R37", "setup_expiry", "info", f"{ny(end):%a %H:%M}")
         if now >= (s.expiry_ns or 0):
             s.state, s.invalid_reason = "expired", s.invalid_reason or "no_entry_model"
             s.log("CRT-R60", "ob_before_expiry", "fail", None, "no 15m OB in the killzone")
