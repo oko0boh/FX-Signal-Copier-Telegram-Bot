@@ -26,6 +26,8 @@ import pandas as pd
 from crt_robot.data.mtf import Snapshot
 from crt_robot.timeutil import NY_TZ
 
+_BASE_NAMES = {pd.Timedelta(minutes=1): "1m", pd.Timedelta(minutes=5): "5m",
+               pd.Timedelta(minutes=15): "15m", pd.Timedelta(hours=1): "1H"}
 PARENT = {"15m": "1H", "1H": "4H", "4H": "D", "D": "W", "W": "M", "M": "Y"}
 DAILY_TFS = ("D", "D_NY")
 
@@ -156,8 +158,12 @@ class MarketData:
 
     # ---- raw bars -----------------------------------------------------
     def _base_name(self) -> str:
-        return {pd.Timedelta(minutes=1): "1m", pd.Timedelta(minutes=5): "5m",
-                pd.Timedelta(minutes=15): "15m", pd.Timedelta(hours=1): "1H"}.get(self.snap.base_len, "")
+        name = self.cache.get("__base_name__")
+        if name is None:
+            name = _BASE_NAMES.get(self.snap.base_len, "")
+            self.cache["__base_name__"] = name
+            self.cache["__base_has_tf__"] = self.snap.has_tf(name)
+        return name
 
     def n_closed(self, tf: str) -> int:
         tf = self.resolve(tf)
@@ -165,7 +171,7 @@ class MarketData:
             return len(self.bars("M"))
         if tf == "W_MON":
             return len(self.bars("W_MON"))
-        if tf == self._base_name() and not self.snap.has_tf(tf):
+        if tf == self._base_name() and not self.cache["__base_has_tf__"]:
             return self.snap.i + 1
         return self.snap.n_closed(tf)
 
@@ -201,7 +207,9 @@ class MarketData:
         if key in self.cache:
             return self.cache[key]
         if len(self.cache) > 20_000:
+            keep = {k: v for k, v in self.cache.items() if isinstance(k, str)}
             self.cache.clear()
+            self.cache.update(keep)
         val = fn()
         self.cache[key] = val
         return val

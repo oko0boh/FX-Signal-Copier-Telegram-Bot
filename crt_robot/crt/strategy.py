@@ -333,7 +333,7 @@ class CRTStrategy:
             s.log("G-11", "purge_in_refined_key_time", "info", ctx.in_refined_key_time(sw, cfg))
             timed = ctx.in_key_time(sw, cfg, purge=True)
             conf["timed_purge"] = timed
-            if cfg.timing.require_timed_purge:
+            if cfg.timing.require_timed_purge or (s.mode == "romeo" and cfg.timing.romeo_use_killzones):
                 if not s.gate("CRT-R32", "timed_purge", timed, ny(sw).strftime("%a %H:%M"), "killzone/macro/purge hour"):
                     return s.reject("outside_key_time")
             if cfg.timing.closing_hour_filter != "none":

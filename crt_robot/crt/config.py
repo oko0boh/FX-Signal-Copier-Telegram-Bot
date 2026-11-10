@@ -503,6 +503,12 @@ def check_implemented(cfg: StrategyConfig) -> None:
     Phase 2 does not compute yet."""
     flat = cfg.flat()
     problems = []
+    if cfg.bias.allow_delivered_counter:
+        problems.append("bias.allow_delivered_counter=true (CRT-R17)")
+    if cfg.entry.max_entries_per_setup != 1:
+        problems.append("entry.max_entries_per_setup>1 (CRT-R48 re-entries)")
+    if not cfg.crt.allow_reselect:
+        problems.append("crt.allow_reselect=false")
     for path, bad in UNIMPLEMENTED.items():
         v = flat.get(path)
         vals = v if isinstance(v, list) else [v]

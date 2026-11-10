@@ -1,6 +1,6 @@
 # Project status: CRT trading robot
 
-Read this first when starting a new session. Last updated 2026-11-10.
+Read this first when starting a new session. Last updated 2026-11-10 (Phase 2).
 
 ## Decided
 - Strategy: Candle Range Theory (CRT), built on ICT concepts. The rules are in `research/notes/CRT_RULEBOOK.md` (draft v0.2: 73 rules, conflicts, gaps, parameters; v0.2 merged the notebook notes, see its changelog in section 9).
@@ -19,12 +19,15 @@ Romeo videos > Sham videos > ICT > notebook [R] > notebook [S] / [Room] > studen
 - X trader plan: read posts in a browser; traders' calls are votes only (`research/x-traders/`).
 
 ## In progress
-- **Phase 1 build** (separate session, branch `crt-robot-phase1`): data, candle building on the broker clock, primitives, a validated backtester, and a locked holdout of the last 18 months. Result: `docs/PHASE1_REPORT.md`.
+- **Phase 1 build** (branch `crt-robot-phase1`): done; see `docs/PHASE1_REPORT.md`. Blocked only on data (Dukascopy refuses cloud IPs; download on the Mac).
+- **Phase 2 build** (branch `crt-robot-phase2`, 2026-11-10): CRT detector, key levels, context layers, entry models and the romeo / sham / hybrid strategy wrappers on the Phase 1 engine; rulebook v0.2 section 7 as typed config (`config/strategy/`); CLI `python -m crt_robot.run backtest|setups|report` (tuning period only). 195 tests pass, including a look-ahead audit per mode. **Not yet run on real data; no performance measured.** See `docs/PHASE2_REPORT.md` (rule coverage table, gaps, Mac commands).
 
 ## Next
-1. ~~Merge `00-answers.md` into the rulebook (bump it to v0.2, update the defaults in section 7).~~ Done 2026-11-10 (rulebook v0.2).
-2. Phase 2: CRT detector plus Romeo/Sham/hybrid modes on top of the Phase 1 primitives, using the rulebook v0.2 parameters (section 7). Backtest on the tuning period only.
-3. Run the holdout once, then move to the alerts-only stage.
+1. On the Mac: download data, run the quality report, then `python -m crt_robot.run setups ...` (`docs/PHASE2_REPORT.md` §9) and share `reports/setups/setups_summary.md`.
+2. Fix in advance: minimum trade count, the "nearby values also work" rule and the removal rule. Then tune on the tuning period only.
+3. Portfolio runner across EURUSD / GBPUSD / XAUUSD (shared equity, account-wide −2% day stop, trade caps).
+4. 2× costs, Monte Carlo, then the holdout once per chosen mode; then alerts-only.
+5. Check `config/news/fomc.yaml` against the Federal Reserve calendar (typed from memory).
 
 ## Still open
 Not answered by the notebook either:
@@ -34,6 +37,8 @@ Not answered by the notebook either:
 - The OTE zone numbers (C-06, G-14).
 - Model #1 trigger on the model candle's wick or body (C-07, Q9).
 - Romeo's own published book is still not studied.
+
+Clock decisions made explicit in Phase 2 (`config/strategy/rulebook_v0.2.yaml`, `clock:`): daily candle = D_NY (00:00 NY, rulebook) by default, broker day `D` as the alternative; week = Sunday 17:00 to Friday 17:00. Confirm or change.
 
 Other:
 - VPS choice.
